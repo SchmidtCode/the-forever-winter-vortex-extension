@@ -7,6 +7,7 @@
 - Add UE4SS archive routing for Win64 loader packages and `ue4ss\Mods` mod folders.
 - Add official/basic UE4SS release routing for `UE4SS.dll`, `UE4SS-settings.ini`, `Mods`, and signature folders.
 - Add Cheaper Innards-style UE4SS archive normalization for root `Mods` folders packaged next to `ue4ss`.
+- Add dedicated TFWWorkbench release routing, skipping examples and preparing the expected data folder.
 - Add mixed UE4SS plus PAK archive routing through the game-root mod type.
 - Skip global `mods.txt` and `mods.json` from UE4SS mod-only archives to avoid conflicts with the UE4SS base install.
 - Suppress UE4SS dependency warnings when UE4SS is already installed in Vortex or deployed to Win64.

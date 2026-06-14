@@ -5,6 +5,7 @@ const {
   MOD_TYPES,
   PAKS_MODS_PATH,
   PAKS_ROOT_PATH,
+  TFW_WORKBENCH_DATA_PATH,
   UE4SS_MODS_PATH,
   WIN64_PATH,
 } = require('./constants');
@@ -181,6 +182,25 @@ function hasUE4SSModMarkers(files) {
 
 function hasUE4SS(files) {
   return hasDwmapi(files) || hasUE4SSLoaderFile(files) || hasUE4SSSegment(files) || hasUE4SSModMarkers(files);
+}
+
+function isTFWWorkbenchArchive(files) {
+  return fileEntries(files).some((file) => {
+    const segments = pathSegments(file).map((segment) => segment.toLowerCase());
+    const workbenchIdx = indexOfSegment(segments, 'tfwworkbench');
+    return workbenchIdx !== -1
+      && segments[workbenchIdx + 1] === 'scripts'
+      && segments[workbenchIdx + 2] === 'main.lua';
+  });
+}
+
+function tfwWorkbenchDestination(file) {
+  const segments = pathSegments(file);
+  const workbenchIdx = indexOfSegment(segments, 'tfwworkbench');
+  if (workbenchIdx === -1) {
+    return undefined;
+  }
+  return path.join(UE4SS_MODS_PATH, segments.slice(workbenchIdx).join('/'));
 }
 
 function commonPathPrefix(files) {
@@ -472,6 +492,30 @@ function installMixedUE4SSPak(files) {
   };
 }
 
+function installTFWWorkbench(files) {
+  const instructions = [
+    setModTypeInstruction(MOD_TYPES.GAME_ROOT),
+    {
+      type: 'mkdir',
+      destination: TFW_WORKBENCH_DATA_PATH,
+    },
+  ];
+
+  for (const file of fileEntries(files)) {
+    const destination = tfwWorkbenchDestination(file);
+    if (destination !== undefined) {
+      instructions.push(copyInstruction(file, destination));
+    }
+  }
+
+  return {
+    kind: 'tfw-workbench',
+    instructions,
+    modType: MOD_TYPES.GAME_ROOT,
+    warnings: ['ue4ss-loader-missing'],
+  };
+}
+
 function buildInstallInstructions(files) {
   if (isSignatureBypassArchive(files) && !hasUE4SS(files) && !hasPakFile(files)) {
     return installSignatureBypass(files);
@@ -479,6 +523,10 @@ function buildInstallInstructions(files) {
 
   if (hasGameRootPath(files)) {
     return installGameRoot(files);
+  }
+
+  if (isTFWWorkbenchArchive(files)) {
+    return installTFWWorkbench(files);
   }
 
   if (hasUE4SS(files) && hasPakFile(files)) {
@@ -528,6 +576,7 @@ module.exports = {
   hasGameRootPath,
   hasPakTriplet,
   isSignatureBypassArchive,
+  isTFWWorkbenchArchive,
   modTypeTest,
   normalizeArchivePath,
   testSupportedContent,

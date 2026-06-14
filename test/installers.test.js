@@ -7,6 +7,7 @@ const {
   buildInstallInstructions,
   hasPakTriplet,
   isSignatureBypassArchive,
+  isTFWWorkbenchArchive,
   testSupportedContent,
   testSupportedSignatureBypass,
 } = require('../src/installers');
@@ -14,6 +15,13 @@ const {
 function copyDestinations(result) {
   return result.instructions
     .filter((instruction) => instruction.type === 'copy')
+    .map((instruction) => instruction.destination)
+    .sort();
+}
+
+function mkdirDestinations(result) {
+  return result.instructions
+    .filter((instruction) => instruction.type === 'mkdir')
     .map((instruction) => instruction.destination)
     .sort();
 }
@@ -198,6 +206,29 @@ test('root Mods folder without loader routes under ue4ss Mods and warns', () => 
   assert.deepEqual(copyDestinations(result), [
     path.join('CheaperInnardsUpgrades', 'Scripts', 'main.lua'),
     path.join('CheaperInnardsUpgrades', 'UpgradeCosts.json'),
+  ].sort());
+});
+
+test('TFWWorkbench release archive installs mod folder, skips examples, and creates data folder', () => {
+  const files = [
+    'Examples/Item/001_TestItem.json',
+    'TFWWorkbench/dlls/main.dll',
+    'TFWWorkbench/Scripts/json.lua',
+    'TFWWorkbench/Scripts/main.lua',
+  ];
+  const result = buildInstallInstructions(files);
+
+  assert.equal(isTFWWorkbenchArchive(files), true);
+  assert.equal(result.kind, 'tfw-workbench');
+  assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
+  assert.deepEqual(result.warnings, ['ue4ss-loader-missing']);
+  assert.deepEqual(mkdirDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'TFWWorkbench'),
+  ]);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'TFWWorkbench', 'Scripts', 'json.lua'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'TFWWorkbench', 'Scripts', 'main.lua'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'TFWWorkbench', 'dlls', 'main.dll'),
   ].sort());
 });
 

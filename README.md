@@ -26,6 +26,7 @@ This extension registers the Steam release, creates the common PAK `Mods` folder
 | User-downloaded Signature Bypass archive with `dsound.dll` and `bitfix` | `tfw-win64-root` | `Windows\ForeverWinter\Binaries\Win64` |
 | UE4SS loader archive with `dwmapi.dll` and `ue4ss` | `tfw-win64-root` | `Windows\ForeverWinter\Binaries\Win64` |
 | UE4SS mod archive under `ue4ss\Mods\<mod>` or `Mods\<mod>` | `tfw-ue4ss-mods` | `Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods` |
+| TFWWorkbench release archive | `tfw-game-root` | `TFWWorkbench` to UE4SS Mods, data folder under `Content\Paks\Mods\TFWWorkbench` |
 | Mixed UE4SS plus PAK archive | `tfw-game-root` | UE4SS files to Win64, PAK files to `Content\Paks` or `Content\Paks\Mods` |
 | Archive already containing `Windows\ForeverWinter\...` | `tfw-game-root` | Game root, preserving that structure |
 
@@ -60,6 +61,26 @@ If a UE4SS archive also contains PAK files, the extension installs it as a game-
 Some UE4SS mods may still require enabling in `mods.txt` or `mods.json` depending on their UE4SS version and archive layout. This beta keeps global manifests from UE4SS loader or all-in-one archives, but skips global `mods.txt` and `mods.json` from UE4SS mod-only archives to avoid conflicts with the base UE4SS install. It does not merge or edit existing manifests, because overwriting those files could disable other UE4SS mods.
 
 When a mod offers both a UE4SS version and an older pure asset/PAK version, prefer the UE4SS version if the mod author says that is the maintained path. The extension does not convert pure asset mods into UE4SS mods; it only routes the files in the archive you install.
+
+### TFWWorkbench
+
+TFWWorkbench is a GitHub-hosted UE4SS mod for runtime data-table changes:
+
+https://github.com/smotti/TFWWorkbench/releases
+
+The extension recognizes the official release archive layout and installs the `TFWWorkbench` folder to:
+
+```text
+Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods
+```
+
+It also creates the expected data folder when Vortex supports the directory instruction:
+
+```text
+Windows\ForeverWinter\Content\Paks\Mods\TFWWorkbench
+```
+
+The release archive's `Examples` folder is intentionally skipped. Copy examples manually only when you want to inspect or adapt them; they are not deployed as active mods by default. TFWWorkbench still needs to be enabled in the shared UE4SS manifest, usually with `TFWWorkbench : 1` in `mods.txt`.
 
 ### UE4SS Manifest Linting
 
