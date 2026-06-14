@@ -19,7 +19,8 @@ const DEFAULT_BUILTIN_ENTRIES = [
   { mod_name: 'Keybinds', mod_enabled: true },
 ];
 
-const BUILTIN_ENTRY_NAMES = new Set(DEFAULT_BUILTIN_ENTRIES.map((entry) => entry.mod_name));
+const BUILTIN_ENTRY_NAMES = new Set(DEFAULT_BUILTIN_ENTRIES.map((entry) => entry.mod_name.toLowerCase()));
+const IGNORED_FOLDER_NAMES = new Set(['shared']);
 
 function cleanModName(value) {
   return String(value || '').trim();
@@ -117,6 +118,8 @@ function mergeManifestEntries(...entryGroups) {
 
 function manifestEntriesFromFolderNames(folderNames) {
   return Array.from(new Set(folderNames.map(cleanModName).filter(Boolean)))
+    .filter((modName) => !isBuiltInEntryName(modName))
+    .filter((modName) => !IGNORED_FOLDER_NAMES.has(modName.toLowerCase()))
     .sort((left, right) => left.localeCompare(right))
     .map((modName) => ({
       mod_name: modName,
@@ -125,7 +128,7 @@ function manifestEntriesFromFolderNames(folderNames) {
 }
 
 function isBuiltInEntryName(modName) {
-  return BUILTIN_ENTRY_NAMES.has(cleanModName(modName));
+  return BUILTIN_ENTRY_NAMES.has(cleanModName(modName).toLowerCase());
 }
 
 function buildAggregateManifestEntries(existingEntries, folderNames) {

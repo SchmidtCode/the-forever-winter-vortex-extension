@@ -15,6 +15,7 @@
 - Regenerate shared UE4SS `mods.txt` and `mods.json` after deployment from the deployed UE4SS mod folders.
 - Treat NoRecoil/Cheaper-style archives with bundled UE4SS or Signature Bypass files as content mods, skipping shared runtime/dependency files that should be installed separately.
 - Skip UE4SS built-in/shared folders and generated manifest files from bundled content mod archives to reduce Vortex file conflicts.
+- Do not auto-enable UE4SS built-in folders or the `shared` helper folder just because they exist under `ue4ss\Mods`.
 - Add game-root preservation for archives already containing `Windows\ForeverWinter\...`.
 - Add Signature Bypass detection and user-archive routing to the game Win64 folder without bundling or redistributing bypass files.
 - Support `version.dll` as the alternate Signature Bypass proxy when `dsound.dll` is absent.

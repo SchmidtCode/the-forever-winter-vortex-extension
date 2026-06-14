@@ -79,22 +79,29 @@ Keybinds : 1
 test('buildAggregateManifestEntries preserves built-ins and enables deployed mod folders', () => {
   const existing = parseModsTxt(`CheatManagerEnablerMod : 1
 LineTraceMod : 0
+SplitScreenMod : 0
 NoRecoil : 1
 RemovedMod : 1
 Keybinds : 1
 `);
   const entries = buildAggregateManifestEntries(existing, [
+    'BPModLoaderMod',
     'CheaperInnardsUpgrades',
+    'shared',
+    'SplitScreenMod',
     'TFWWorkbench',
   ]);
 
   assert.equal(entries.some((entry) => entry.mod_name === 'RemovedMod'), false);
+  assert.equal(entries.some((entry) => entry.mod_name === 'shared'), false);
   assert.deepEqual(entries.filter((entry) => [
     'LineTraceMod',
+    'SplitScreenMod',
     'CheaperInnardsUpgrades',
     'TFWWorkbench',
     'Keybinds',
   ].includes(entry.mod_name)), [
+    { mod_name: 'SplitScreenMod', mod_enabled: false },
     { mod_name: 'LineTraceMod', mod_enabled: false },
     { mod_name: 'Keybinds', mod_enabled: true },
     { mod_name: 'CheaperInnardsUpgrades', mod_enabled: true },

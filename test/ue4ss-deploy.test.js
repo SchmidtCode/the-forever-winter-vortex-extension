@@ -133,11 +133,14 @@ test('regenerateUE4SSManifests writes merged mods txt and json from deployed fol
   const fsModule = mockFs({
     directories: [
       modsDir,
+      path.join(modsDir, 'BPModLoaderMod'),
       path.join(modsDir, 'NoRecoil'),
       path.join(modsDir, 'CheaperInnardsUpgrades'),
+      path.join(modsDir, 'shared'),
+      path.join(modsDir, 'SplitScreenMod'),
     ],
     files: {
-      [path.join(modsDir, 'mods.txt')]: 'LineTraceMod : 0\r\nRemovedMod : 1\r\nKeybinds : 1\r\n',
+      [path.join(modsDir, 'mods.txt')]: 'LineTraceMod : 1\r\nSplitScreenMod : 0\r\nRemovedMod : 1\r\nKeybinds : 1\r\n',
     },
   });
 
@@ -148,7 +151,9 @@ test('regenerateUE4SSManifests writes merged mods txt and json from deployed fol
   assert.equal(result.skipped, false);
   assert.equal(modsTxt.includes('CheaperInnardsUpgrades : 1'), true);
   assert.equal(modsTxt.includes('NoRecoil : 1'), true);
-  assert.equal(modsTxt.includes('LineTraceMod : 0'), true);
+  assert.equal(modsTxt.includes('LineTraceMod : 1'), true);
+  assert.equal(modsTxt.includes('SplitScreenMod : 0'), true);
+  assert.equal(modsTxt.includes('shared : 1'), false);
   assert.equal(modsTxt.includes('RemovedMod'), false);
   assert.deepEqual(JSON.parse(modsJson).filter((entry) => [
     'CheaperInnardsUpgrades',
