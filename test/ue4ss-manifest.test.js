@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const {
+  buildAggregateManifestEntries,
   mergeManifestEntries,
   parseManifest,
   parseModsJson,
@@ -72,6 +73,32 @@ Keybinds : 1
     { mod_name: 'Keybinds', mod_enabled: true },
     { mod_name: 'CheaperInnardsUpgrades', mod_enabled: true },
     { mod_name: 'NoRecoil', mod_enabled: true },
+  ]);
+});
+
+test('buildAggregateManifestEntries preserves built-ins and enables deployed mod folders', () => {
+  const existing = parseModsTxt(`CheatManagerEnablerMod : 1
+LineTraceMod : 0
+NoRecoil : 1
+RemovedMod : 1
+Keybinds : 1
+`);
+  const entries = buildAggregateManifestEntries(existing, [
+    'CheaperInnardsUpgrades',
+    'TFWWorkbench',
+  ]);
+
+  assert.equal(entries.some((entry) => entry.mod_name === 'RemovedMod'), false);
+  assert.deepEqual(entries.filter((entry) => [
+    'LineTraceMod',
+    'CheaperInnardsUpgrades',
+    'TFWWorkbench',
+    'Keybinds',
+  ].includes(entry.mod_name)), [
+    { mod_name: 'LineTraceMod', mod_enabled: false },
+    { mod_name: 'Keybinds', mod_enabled: true },
+    { mod_name: 'CheaperInnardsUpgrades', mod_enabled: true },
+    { mod_name: 'TFWWorkbench', mod_enabled: true },
   ]);
 });
 

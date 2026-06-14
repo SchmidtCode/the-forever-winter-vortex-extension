@@ -12,6 +12,20 @@ const {
 
 const PAK_EXTENSIONS = new Set(['.pak', '.ucas', '.utoc']);
 
+const UE4SS_RUNTIME_MOD_FOLDERS = new Set([
+  'actordumpermod',
+  'bpml_genericfunctions',
+  'bpmodloadermod',
+  'cheatmanagerenablermod',
+  'consolecommandsmod',
+  'consoleenablermod',
+  'jsbluaprofilermod',
+  'keybinds',
+  'linetracemod',
+  'shared',
+  'splitscreenmod',
+]);
+
 const ROOT_PAK_BASENAME_PATTERNS = [
   /^increased hunter killers spawn threshold_p\.(pak|ucas|utoc)$/i,
   /^increased hunter killers spawn threshold.*\.(pak|ucas|utoc)$/i,
@@ -250,11 +264,76 @@ function isGlobalUE4SSManifest(destination) {
   return normalized === 'mods.txt' || normalized === 'mods.json';
 }
 
+function isUE4SSRuntimeModDestination(destination) {
+  const segments = pathSegments(destination).map((segment) => segment.toLowerCase());
+  return segments.length > 0 && UE4SS_RUNTIME_MOD_FOLDERS.has(segments[0]);
+}
+
+function isDeployableUE4SSModDestination(destination) {
+  return destination !== undefined
+    && destination.length > 0
+    && !isGlobalUE4SSManifest(destination)
+    && !isUE4SSRuntimeModDestination(destination);
+}
+
+function deployableUE4SSModDestinations(files) {
+  return ue4ssModOnlyDestinations(files)
+    .filter(({ destination }) => isDeployableUE4SSModDestination(destination));
+}
+
+function hasDeployableUE4SSMod(files) {
+  return deployableUE4SSModDestinations(files).length > 0;
+}
+
+function isBundledDependencyGameRootDestination(destination) {
+  const normalized = normalizeArchivePath(destination).toLowerCase();
+  const win64 = normalizeArchivePath(WIN64_PATH).toLowerCase();
+  if (!normalized.startsWith(`${win64}/`)) {
+    return false;
+  }
+
+  const relativeWin64 = normalized.slice(win64.length + 1);
+  const segments = pathSegments(relativeWin64).map((segment) => segment.toLowerCase());
+  const base = path.posix.basename(relativeWin64);
+
+  if (['dsound.dll', 'version.dll', 'dwmapi.dll'].includes(base)) {
+    return true;
+  }
+
+  if (segments.includes('bitfix') || base.startsWith('bitfix')) {
+    return true;
+  }
+
+  if (segments[0] !== 'ue4ss') {
+    return false;
+  }
+
+  if (['ue4ss.dll', 'ue4ss-settings.ini', 'license'].includes(base)) {
+    return true;
+  }
+
+  if (segments[1] === 'ue4ss_signatures') {
+    return true;
+  }
+
+  if (segments[1] === 'mods') {
+    const modsDestination = segments.slice(2).join('/');
+    return !isDeployableUE4SSModDestination(modsDestination);
+  }
+
+  return false;
+}
+
 function installGameRoot(files) {
   const instructions = [setModTypeInstruction(MOD_TYPES.GAME_ROOT)];
+  const skipBundledDependencies = hasDeployableUE4SSMod(files) || (hasUE4SS(files) && hasPakFile(files));
+
   for (const file of fileEntries(files)) {
     const destination = extractFromGameRoot(file);
     if (destination !== undefined) {
+      if (skipBundledDependencies && isBundledDependencyGameRootDestination(destination)) {
+        continue;
+      }
       instructions.push(copyInstruction(file, destination));
     }
   }
@@ -388,10 +467,8 @@ function inferBareUE4SSModRoot(files) {
 function installUE4SSModOnly(files) {
   const instructions = [setModTypeInstruction(MOD_TYPES.UE4SS_MODS)];
 
-  for (const { file, destination } of ue4ssModOnlyDestinations(files)) {
-    if (!isGlobalUE4SSManifest(destination)) {
-      instructions.push(copyInstruction(file, destination));
-    }
+  for (const { file, destination } of deployableUE4SSModDestinations(files)) {
+    instructions.push(copyInstruction(file, destination));
   }
 
   return {
@@ -440,10 +517,6 @@ function installUE4SSWin64(files) {
     }
   }
 
-  for (const { file, destination } of signatureBypassDestinations(files)) {
-    instructions.push(copyInstruction(file, destination));
-  }
-
   return {
     kind: 'ue4ss-win64',
     instructions,
@@ -457,12 +530,17 @@ function installMixedUE4SSPak(files) {
   const pakType = pakModType(files);
   const pakPath = pakTargetPath(pakType);
   const rootModsUnderUE4SS = hasUE4SSSegment(files);
+  const ue4ssModDestinations = deployableUE4SSModDestinations(files);
 
   for (const file of pakCopyFiles(files)) {
     instructions.push(copyInstruction(file, path.join(pakPath, basename(file))));
   }
 
-  if (hasUE4SSLoader(files)) {
+  if (ue4ssModDestinations.length > 0) {
+    for (const { file, destination } of ue4ssModDestinations) {
+      instructions.push(copyInstruction(file, path.join(UE4SS_MODS_PATH, destination)));
+    }
+  } else if (hasUE4SSLoader(files)) {
     for (const file of fileEntries(files)) {
       const destination = ue4ssWin64Destination(file);
       if (destination !== undefined) {
@@ -473,22 +551,18 @@ function installMixedUE4SSPak(files) {
       }
     }
   } else {
-    for (const { file, destination } of ue4ssModOnlyDestinations(files)) {
-      if (!isGlobalUE4SSManifest(destination)) {
-        instructions.push(copyInstruction(file, path.join(UE4SS_MODS_PATH, destination)));
-      }
+    for (const { file, destination } of ue4ssModDestinations) {
+      instructions.push(copyInstruction(file, path.join(UE4SS_MODS_PATH, destination)));
     }
-  }
-
-  for (const { file, destination } of signatureBypassDestinations(files)) {
-    instructions.push(copyInstruction(file, path.join(WIN64_PATH, destination)));
   }
 
   return {
     kind: 'mixed-ue4ss-pak',
     instructions,
     modType: MOD_TYPES.GAME_ROOT,
-    warnings: hasUE4SSLoader(files) ? [] : ['ue4ss-loader-missing'],
+    warnings: ue4ssModDestinations.length > 0 || !hasUE4SSLoader(files)
+      ? ['ue4ss-loader-missing']
+      : [],
   };
 }
 
@@ -534,7 +608,9 @@ function buildInstallInstructions(files) {
   }
 
   if (hasUE4SS(files)) {
-    return hasUE4SSLoader(files) ? installUE4SSWin64(files) : installUE4SSModOnly(files);
+    return hasUE4SSLoader(files) && !hasDeployableUE4SSMod(files)
+      ? installUE4SSWin64(files)
+      : installUE4SSModOnly(files);
   }
 
   if (hasPakFile(files)) {

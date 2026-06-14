@@ -6,6 +6,21 @@ const BUILTIN_FOOTER = [
   'Keybinds : 1',
 ];
 
+const DEFAULT_BUILTIN_ENTRIES = [
+  { mod_name: 'CheatManagerEnablerMod', mod_enabled: true },
+  { mod_name: 'ActorDumperMod', mod_enabled: false },
+  { mod_name: 'ConsoleCommandsMod', mod_enabled: true },
+  { mod_name: 'ConsoleEnablerMod', mod_enabled: true },
+  { mod_name: 'SplitScreenMod', mod_enabled: false },
+  { mod_name: 'LineTraceMod', mod_enabled: false },
+  { mod_name: 'BPModLoaderMod', mod_enabled: true },
+  { mod_name: 'BPML_GenericFunctions', mod_enabled: true },
+  { mod_name: 'jsbLuaProfilerMod', mod_enabled: false },
+  { mod_name: 'Keybinds', mod_enabled: true },
+];
+
+const BUILTIN_ENTRY_NAMES = new Set(DEFAULT_BUILTIN_ENTRIES.map((entry) => entry.mod_name));
+
 function cleanModName(value) {
   return String(value || '').trim();
 }
@@ -100,6 +115,28 @@ function mergeManifestEntries(...entryGroups) {
   return Array.from(merged.values());
 }
 
+function manifestEntriesFromFolderNames(folderNames) {
+  return Array.from(new Set(folderNames.map(cleanModName).filter(Boolean)))
+    .sort((left, right) => left.localeCompare(right))
+    .map((modName) => ({
+      mod_name: modName,
+      mod_enabled: true,
+    }));
+}
+
+function isBuiltInEntryName(modName) {
+  return BUILTIN_ENTRY_NAMES.has(cleanModName(modName));
+}
+
+function buildAggregateManifestEntries(existingEntries, folderNames) {
+  const folderEntries = manifestEntriesFromFolderNames(folderNames);
+  const folderNamesSet = new Set(folderEntries.map((entry) => entry.mod_name));
+  const retainedExisting = normalizeEntries(existingEntries)
+    .filter((entry) => isBuiltInEntryName(entry.mod_name) || folderNamesSet.has(entry.mod_name));
+
+  return mergeManifestEntries(DEFAULT_BUILTIN_ENTRIES, retainedExisting, folderEntries);
+}
+
 function sortManifestEntries(entries) {
   const normalized = normalizeEntries(entries);
   return normalized.sort((left, right) => {
@@ -124,7 +161,11 @@ function renderModsJson(entries) {
 }
 
 module.exports = {
+  buildAggregateManifestEntries,
+  DEFAULT_BUILTIN_ENTRIES,
+  isBuiltInEntryName,
   mergeManifestEntries,
+  manifestEntriesFromFolderNames,
   parseManifest,
   parseModsJson,
   parseModsTxt,

@@ -27,7 +27,7 @@ This extension registers the Steam release, creates the common PAK `Mods` folder
 | UE4SS loader archive with `dwmapi.dll` and `ue4ss` | `tfw-win64-root` | `Windows\ForeverWinter\Binaries\Win64` |
 | UE4SS mod archive under `ue4ss\Mods\<mod>` or `Mods\<mod>` | `tfw-ue4ss-mods` | `Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods` |
 | TFWWorkbench release archive | `tfw-game-root` | `TFWWorkbench` to UE4SS Mods, data folder under `Content\Paks\Mods\TFWWorkbench` |
-| Mixed UE4SS plus PAK archive | `tfw-game-root` | UE4SS files to Win64, PAK files to `Content\Paks` or `Content\Paks\Mods` |
+| Mixed UE4SS plus PAK archive | `tfw-game-root` | UE4SS mod folders to `Win64\ue4ss\Mods`, PAK files to `Content\Paks` or `Content\Paks\Mods` |
 | Archive already containing `Windows\ForeverWinter\...` | `tfw-game-root` | Game root, preserving that structure |
 
 Unknown bare PAK triplets intentionally default to `Windows\ForeverWinter\Content\Paks\Mods`. Root-Paks support should grow through specific filename rules and user reports.
@@ -58,7 +58,16 @@ Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods
 
 If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`.
 
-Some UE4SS mods may still require enabling in `mods.txt` or `mods.json` depending on their UE4SS version and archive layout. This beta keeps global manifests from UE4SS loader or all-in-one archives, but skips global `mods.txt` and `mods.json` from UE4SS mod-only archives to avoid conflicts with the base UE4SS install. It does not merge or edit existing manifests, because overwriting those files could disable other UE4SS mods.
+Some The Forever Winter mod archives bundle their own copy of UE4SS, Signature Bypass, or shared UE4SS helper files alongside the actual mod. Those bundled dependency files are intentionally skipped when the archive also contains a real UE4SS mod folder. Install UE4SS and Signature Bypass as their own Vortex mods, then install content mods like NoRecoil or Cheaper Innards Upgrades on top. This avoids Vortex conflicts over shared files such as `dwmapi.dll`, `UE4SS.dll`, `UE4SS-settings.ini`, `mods.txt`, `mods.json`, `Keybinds`, `shared`, `dsound.dll`, and `bitfix`.
+
+After Vortex deploys mods, the extension regenerates shared UE4SS manifests from the deployed folders in `Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods`. It writes both:
+
+```text
+mods.txt
+mods.json
+```
+
+Existing UE4SS built-in entries are preserved when present, stale custom entries are removed when their folder is no longer deployed, and current UE4SS mod folders are written as enabled. Global `mods.txt` and `mods.json` files from UE4SS content archives are skipped during install so individual mods do not fight over the shared manifest files.
 
 When a mod offers both a UE4SS version and an older pure asset/PAK version, prefer the UE4SS version if the mod author says that is the maintained path. The extension does not convert pure asset mods into UE4SS mods; it only routes the files in the archive you install.
 
@@ -80,11 +89,11 @@ It also creates the expected data folder when Vortex supports the directory inst
 Windows\ForeverWinter\Content\Paks\Mods\TFWWorkbench
 ```
 
-The release archive's `Examples` folder is intentionally skipped. Copy examples manually only when you want to inspect or adapt them; they are not deployed as active mods by default. TFWWorkbench still needs to be enabled in the shared UE4SS manifest, usually with `TFWWorkbench : 1` in `mods.txt`.
+The release archive's `Examples` folder is intentionally skipped. Copy examples manually only when you want to inspect or adapt them; they are not deployed as active mods by default. After deployment, the extension enables the deployed `TFWWorkbench` folder in the shared UE4SS manifests.
 
 ### UE4SS Manifest Linting
 
-This repo includes a small manifest linter/normalizer for inspecting UE4SS `mods.txt` and `mods.json` files:
+This repo includes a small manifest linter/normalizer for inspecting UE4SS `mods.txt` and `mods.json` files outside Vortex:
 
 ```powershell
 npm run lint:ue4ss-manifest -- path\to\mods.json
@@ -96,7 +105,7 @@ Add `--write` to rewrite the file in normalized form:
 npm run lint:ue4ss-manifest -- path\to\mods.json --write
 ```
 
-The linter can recover from simple missing-comma `mods.json` files and also understands `mods.txt` entries like `NoRecoil : 1`. This is intentionally separate from deployment for now; a future version can use the same parser for an aggregate writer that merges installed UE4SS mods into one shared manifest.
+The linter can recover from simple missing-comma `mods.json` files and also understands `mods.txt` entries like `NoRecoil : 1`. Vortex uses the same parser internally when regenerating shared UE4SS manifests after deployment.
 
 ## Signature Bypass Policy
 
@@ -158,5 +167,5 @@ The package is written to `dist/the-forever-winter-vortex-extension-0.0.1.zip`.
 - Managing the game creates `Windows\ForeverWinter\Content\Paks\Mods`.
 - Missing Signature Bypass shows the warning notification.
 - A user-downloaded Signature Bypass archive installs `dsound.dll`, `bitfix\...`, and `bitfix*` files to `Windows\ForeverWinter\Binaries\Win64`.
-- A mixed UE4SS plus PAK archive deploys the UE4SS files to Win64 and the PAK triplet to the expected PAK folder.
+- A mixed UE4SS plus PAK archive deploys the actual UE4SS mod folder and PAK triplet while skipping bundled dependency/runtime files.
 - Sample archives deploy to their expected folders and uninstall cleanly.

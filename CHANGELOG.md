@@ -12,6 +12,9 @@
 - Skip global `mods.txt` and `mods.json` from UE4SS mod-only archives to avoid conflicts with the UE4SS base install.
 - Suppress UE4SS dependency warnings when UE4SS is already installed in Vortex or deployed to Win64.
 - Add UE4SS manifest parsing and a `lint:ue4ss-manifest` helper for normalizing `mods.txt` and tolerant `mods.json` files.
+- Regenerate shared UE4SS `mods.txt` and `mods.json` after deployment from the deployed UE4SS mod folders.
+- Treat NoRecoil/Cheaper-style archives with bundled UE4SS or Signature Bypass files as content mods, skipping shared runtime/dependency files that should be installed separately.
+- Skip UE4SS built-in/shared folders and generated manifest files from bundled content mod archives to reduce Vortex file conflicts.
 - Add game-root preservation for archives already containing `Windows\ForeverWinter\...`.
 - Add Signature Bypass detection and user-archive routing to the game Win64 folder without bundling or redistributing bypass files.
 - Support `version.dll` as the alternate Signature Bypass proxy when `dsound.dll` is absent.

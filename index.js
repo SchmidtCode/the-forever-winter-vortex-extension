@@ -20,6 +20,7 @@ const {
   testSupportedSignatureBypass,
 } = require('./src/installers');
 const { prepareForModding } = require('./src/setup');
+const { regenerateUE4SSManifests } = require('./src/ue4ss-deploy');
 
 function loadVortexApi() {
   try {
@@ -53,6 +54,13 @@ function getDiscoveredGamePath(context) {
   const state = context.api.getState();
   const discovery = state.settings?.gameMode?.discovered?.[GAME_ID];
   return discovery !== undefined ? discovery.path : undefined;
+}
+
+function isTheForeverWinterProfile(context, profileId) {
+  const state = context.api.getState();
+  const profiles = state.persistent?.profiles || {};
+  const profile = profiles[profileId];
+  return profile === undefined || profile.gameId === undefined || profile.gameId === GAME_ID;
 }
 
 function statExists(filePath) {
@@ -112,6 +120,42 @@ function notifyUE4SSLoaderMissing(api) {
   });
 }
 
+function notifyUE4SSManifestFailed(api, error) {
+  api.sendNotification({
+    id: 'tfw-ue4ss-manifest-regeneration-failed',
+    type: 'warning',
+    title: 'UE4SS manifest update failed',
+    message: `Vortex could not regenerate UE4SS mods.txt/mods.json: ${error.message}`,
+  });
+}
+
+async function regenerateUE4SSManifestsForContext(context, profileId) {
+  if (!isTheForeverWinterProfile(context, profileId)) {
+    return;
+  }
+
+  try {
+    await regenerateUE4SSManifests(fs, getDiscoveredGamePath(context));
+  } catch (err) {
+    notifyUE4SSManifestFailed(context.api, err);
+  }
+}
+
+function registerUE4SSManifestEvents(context) {
+  const register = () => {
+    if (typeof context.api.onAsync === 'function') {
+      context.api.onAsync('did-deploy', (profileId) =>
+        regenerateUE4SSManifestsForContext(context, profileId));
+    }
+  };
+
+  if (typeof context.once === 'function') {
+    context.once(register);
+  } else {
+    register();
+  }
+}
+
 function installSignatureBypass(context, files) {
   const result = buildInstallInstructions(files);
   return Promise.resolve({ instructions: result.instructions });
@@ -148,6 +192,8 @@ function main(context) {
       steamAppId: Number(STEAM_APP_ID),
       nexusPageId: GAME_ID,
       hashFiles: [GAME_EXECUTABLE],
+      ignoreConflicts: ['enabled.txt', 'mods.txt', 'mods.json', 'UE4SS-settings.ini'],
+      ignoreDeploy: ['mods.txt', 'mods.json'],
     },
   });
 
@@ -209,6 +255,8 @@ function main(context) {
     (instructions) => Promise.resolve(modTypeTest(instructions, MOD_TYPES.GAME_ROOT)),
     { name: 'TFW Game Root', mergeMods: true },
   );
+
+  registerUE4SSManifestEvents(context);
 
   return true;
 }
