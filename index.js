@@ -49,6 +49,54 @@ function absoluteGamePath(context, relPath) {
   };
 }
 
+function getDiscoveredGamePath(context) {
+  const state = context.api.getState();
+  const discovery = state.settings?.gameMode?.discovered?.[GAME_ID];
+  return discovery !== undefined ? discovery.path : undefined;
+}
+
+function statExists(filePath) {
+  return fs.statAsync(filePath)
+    .then(() => true)
+    .catch(() => false);
+}
+
+function hasInstalledUE4SSMod(context) {
+  const state = context.api.getState();
+  const mods = state.persistent?.mods?.[GAME_ID] || {};
+  return Object.entries(mods).some(([modId, mod]) => {
+    const searchable = [
+      modId,
+      mod?.installationPath,
+      mod?.attributes?.name,
+      mod?.attributes?.logicalFileName,
+      mod?.attributes?.modName,
+      mod?.attributes?.source,
+    ].filter(Boolean).join(' ').toLowerCase();
+    return searchable.includes('ue4ss');
+  });
+}
+
+async function hasDeployedUE4SS(context) {
+  const gamePath = getDiscoveredGamePath(context);
+  if (gamePath === undefined) {
+    return false;
+  }
+
+  const win64 = path.join(gamePath, WIN64_PATH);
+  const hasProxy = await statExists(path.join(win64, 'dwmapi.dll'));
+  const hasRootDll = await statExists(path.join(win64, 'UE4SS.dll'));
+  const hasFolderDll = await statExists(path.join(win64, 'ue4ss', 'UE4SS.dll'));
+  return hasProxy && (hasRootDll || hasFolderDll);
+}
+
+async function hasUE4SSAvailable(context) {
+  if (hasInstalledUE4SSMod(context)) {
+    return true;
+  }
+  return hasDeployedUE4SS(context);
+}
+
 function notifyUE4SSLoaderMissing(api) {
   api.sendNotification({
     id: 'tfw-ue4ss-loader-missing',
@@ -69,12 +117,13 @@ function installSignatureBypass(context, files) {
   return Promise.resolve({ instructions: result.instructions });
 }
 
-function installContent(context, files) {
+async function installContent(context, files) {
   const result = buildInstallInstructions(files);
-  if (result.warnings.includes('ue4ss-loader-missing')) {
+  if (result.warnings.includes('ue4ss-loader-missing')
+      && !(await hasUE4SSAvailable(context))) {
     notifyUE4SSLoaderMissing(context.api);
   }
-  return Promise.resolve({ instructions: result.instructions });
+  return { instructions: result.instructions };
 }
 
 function main(context) {

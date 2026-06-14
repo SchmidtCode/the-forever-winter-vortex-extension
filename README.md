@@ -57,9 +57,25 @@ Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods
 
 If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`.
 
-Some UE4SS mods may still require enabling in `mods.txt` depending on their UE4SS version and archive layout. This beta copies `mods.txt` when the mod archive provides one, but it does not merge or edit an existing `mods.txt`, because overwriting that file could disable other UE4SS mods.
+Some UE4SS mods may still require enabling in `mods.txt` or `mods.json` depending on their UE4SS version and archive layout. This beta keeps global manifests from UE4SS loader or all-in-one archives, but skips global `mods.txt` and `mods.json` from UE4SS mod-only archives to avoid conflicts with the base UE4SS install. It does not merge or edit existing manifests, because overwriting those files could disable other UE4SS mods.
 
 When a mod offers both a UE4SS version and an older pure asset/PAK version, prefer the UE4SS version if the mod author says that is the maintained path. The extension does not convert pure asset mods into UE4SS mods; it only routes the files in the archive you install.
+
+### UE4SS Manifest Linting
+
+This repo includes a small manifest linter/normalizer for inspecting UE4SS `mods.txt` and `mods.json` files:
+
+```powershell
+npm run lint:ue4ss-manifest -- path\to\mods.json
+```
+
+Add `--write` to rewrite the file in normalized form:
+
+```powershell
+npm run lint:ue4ss-manifest -- path\to\mods.json --write
+```
+
+The linter can recover from simple missing-comma `mods.json` files and also understands `mods.txt` entries like `NoRecoil : 1`. This is intentionally separate from deployment for now; a future version can use the same parser for an aggregate writer that merges installed UE4SS mods into one shared manifest.
 
 ## Signature Bypass Policy
 

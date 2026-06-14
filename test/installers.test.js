@@ -169,6 +169,8 @@ test('Cheaper Innards-style archive moves root Mods under ue4ss and routes bypas
 
 test('UE4SS mod folder without loader routes to ue4ss Mods and warns', () => {
   const result = buildInstallInstructions([
+    'ue4ss/Mods/mods.txt',
+    'ue4ss/Mods/mods.json',
     'ue4ss/Mods/NoRecoil/enabled.txt',
     'ue4ss/Mods/NoRecoil/Scripts/main.lua',
   ]);
@@ -187,6 +189,7 @@ test('root Mods folder without loader routes under ue4ss Mods and warns', () => 
     'Mods/CheaperInnardsUpgrades/Scripts/main.lua',
     'Mods/CheaperInnardsUpgrades/UpgradeCosts.json',
     'Mods/mods.txt',
+    'Mods/mods.json',
   ]);
 
   assert.equal(result.kind, 'ue4ss-mod');
@@ -195,7 +198,6 @@ test('root Mods folder without loader routes under ue4ss Mods and warns', () => 
   assert.deepEqual(copyDestinations(result), [
     path.join('CheaperInnardsUpgrades', 'Scripts', 'main.lua'),
     path.join('CheaperInnardsUpgrades', 'UpgradeCosts.json'),
-    'mods.txt',
   ].sort());
 });
 

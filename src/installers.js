@@ -225,6 +225,11 @@ function isModsDestination(destination) {
   return normalized === 'mods' || normalized.startsWith('mods/');
 }
 
+function isGlobalUE4SSManifest(destination) {
+  const normalized = normalizeArchivePath(destination).toLowerCase();
+  return normalized === 'mods.txt' || normalized === 'mods.json';
+}
+
 function installGameRoot(files) {
   const instructions = [setModTypeInstruction(MOD_TYPES.GAME_ROOT)];
   for (const file of fileEntries(files)) {
@@ -364,7 +369,9 @@ function installUE4SSModOnly(files) {
   const instructions = [setModTypeInstruction(MOD_TYPES.UE4SS_MODS)];
 
   for (const { file, destination } of ue4ssModOnlyDestinations(files)) {
-    instructions.push(copyInstruction(file, destination));
+    if (!isGlobalUE4SSManifest(destination)) {
+      instructions.push(copyInstruction(file, destination));
+    }
   }
 
   return {
@@ -447,7 +454,9 @@ function installMixedUE4SSPak(files) {
     }
   } else {
     for (const { file, destination } of ue4ssModOnlyDestinations(files)) {
-      instructions.push(copyInstruction(file, path.join(UE4SS_MODS_PATH, destination)));
+      if (!isGlobalUE4SSManifest(destination)) {
+        instructions.push(copyInstruction(file, path.join(UE4SS_MODS_PATH, destination)));
+      }
     }
   }
 
