@@ -1,0 +1,17 @@
+{
+  "name": "the-forever-winter-vortex-extension",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Beta Vortex support for The Forever Winter.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "package": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package.ps1"
+  },
+  "keywords": [
+    "vortex",
+    "nexus-mods",
+    "the-forever-winter"
+  ],
+  "license": "MIT"
+}
