@@ -18,7 +18,7 @@ function copyDestinations(result) {
     .sort();
 }
 
-test('missing Signature Bypass archive is handled by signature installer only', async () => {
+test('Signature Bypass archive routes user-provided loader files to Win64 root', async () => {
   const files = [
     'Signature Bypass/dsound.dll',
     'Signature Bypass/bitfix/config.toml',
@@ -37,8 +37,62 @@ test('missing Signature Bypass archive is handled by signature installer only', 
 
   const result = buildInstallInstructions(files);
   assert.equal(result.kind, 'signature-bypass');
-  assert.deepEqual(result.instructions, []);
-  assert.deepEqual(result.warnings, ['signature-bypass-manual-install']);
+  assert.equal(result.modType, MOD_TYPES.WIN64_ROOT);
+  assert.deepEqual(result.warnings, []);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('bitfix', 'config.toml'),
+    'bitfix.txt',
+    'dsound.dll',
+  ].sort());
+});
+
+test('Signature Bypass archive with game paths still flattens to Win64 root', () => {
+  const result = buildInstallInstructions([
+    'Signature Bypass/Windows/ForeverWinter/Binaries/Win64/dsound.dll',
+    'Signature Bypass/Windows/ForeverWinter/Binaries/Win64/bitfix/config.toml',
+    'Signature Bypass/Windows/ForeverWinter/Binaries/Win64/bitfix.txt',
+    'Signature Bypass/readme.txt',
+  ]);
+
+  assert.equal(result.kind, 'signature-bypass');
+  assert.equal(result.modType, MOD_TYPES.WIN64_ROOT);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('bitfix', 'config.toml'),
+    'bitfix.txt',
+    'dsound.dll',
+  ].sort());
+});
+
+test('Signature Bypass archive can use version dll when dsound is absent', () => {
+  const result = buildInstallInstructions([
+    'Signature Bypass/version.dll',
+    'Signature Bypass/bitfix/config.toml',
+  ]);
+
+  assert.equal(isSignatureBypassArchive([
+    'Signature Bypass/version.dll',
+    'Signature Bypass/bitfix/config.toml',
+  ]), true);
+  assert.equal(result.kind, 'signature-bypass');
+  assert.equal(result.modType, MOD_TYPES.WIN64_ROOT);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('bitfix', 'config.toml'),
+    'version.dll',
+  ].sort());
+});
+
+test('Signature Bypass archive prefers dsound when both proxies are present', () => {
+  const result = buildInstallInstructions([
+    'Signature Bypass/dsound.dll',
+    'Signature Bypass/version.dll',
+    'Signature Bypass/bitfix/config.toml',
+  ]);
+
+  assert.equal(result.kind, 'signature-bypass');
+  assert.deepEqual(copyDestinations(result), [
+    path.join('bitfix', 'config.toml'),
+    'dsound.dll',
+  ].sort());
 });
 
 test('No Recoil-style UE4SS archive routes loader package to Win64 root', () => {
@@ -59,6 +113,60 @@ test('No Recoil-style UE4SS archive routes loader package to Win64 root', () => 
   ].sort());
 });
 
+test('official UE4SS basic release archive routes loader package to Win64 root', () => {
+  const result = buildInstallInstructions([
+    'UE4SS_v3.0.1/dwmapi.dll',
+    'UE4SS_v3.0.1/UE4SS.dll',
+    'UE4SS_v3.0.1/UE4SS-settings.ini',
+    'UE4SS_v3.0.1/Mods/mods.txt',
+    'UE4SS_v3.0.1/UE4SS_Signatures/FName.ini',
+    'UE4SS_v3.0.1/README.md',
+  ]);
+
+  assert.equal(result.kind, 'ue4ss-win64');
+  assert.equal(result.modType, MOD_TYPES.WIN64_ROOT);
+  assert.deepEqual(copyDestinations(result), [
+    'dwmapi.dll',
+    path.join('Mods', 'mods.txt'),
+    'UE4SS-settings.ini',
+    'UE4SS.dll',
+    path.join('UE4SS_Signatures', 'FName.ini'),
+  ].sort());
+});
+
+test('Cheaper Innards-style archive moves root Mods under ue4ss and routes bypass files', () => {
+  const result = buildInstallInstructions([
+    'CheaperInnards/dwmapi.dll',
+    'CheaperInnards/version.dll',
+    'CheaperInnards/bitfix/config.toml',
+    'CheaperInnards/ue4ss/UE4SS.dll',
+    'CheaperInnards/ue4ss/UE4SS-settings.ini',
+    'CheaperInnards/Mods/mods.txt',
+    'CheaperInnards/Mods/CheaperInnardsUpgrades/Scripts/main.lua',
+    'CheaperInnards/Mods/CheaperInnardsUpgrades/UpgradeCosts.json',
+    'CheaperInnards/Paks/CheaperInnardsUpgrades_P.pak',
+    'CheaperInnards/Paks/CheaperInnardsUpgrades_P.ucas',
+    'CheaperInnards/Paks/CheaperInnardsUpgrades_P.utoc',
+  ]);
+
+  assert.equal(result.kind, 'mixed-ue4ss-pak');
+  assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
+  assert.deepEqual(result.warnings, []);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'bitfix', 'config.toml'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'dwmapi.dll'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'CheaperInnardsUpgrades', 'Scripts', 'main.lua'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'CheaperInnardsUpgrades', 'UpgradeCosts.json'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'mods.txt'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'UE4SS-settings.ini'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'UE4SS.dll'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'version.dll'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnardsUpgrades_P.pak'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnardsUpgrades_P.ucas'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnardsUpgrades_P.utoc'),
+  ].sort());
+});
+
 test('UE4SS mod folder without loader routes to ue4ss Mods and warns', () => {
   const result = buildInstallInstructions([
     'ue4ss/Mods/NoRecoil/enabled.txt',
@@ -71,6 +179,67 @@ test('UE4SS mod folder without loader routes to ue4ss Mods and warns', () => {
   assert.deepEqual(copyDestinations(result), [
     path.join('NoRecoil', 'Scripts', 'main.lua'),
     path.join('NoRecoil', 'enabled.txt'),
+  ].sort());
+});
+
+test('root Mods folder without loader routes under ue4ss Mods and warns', () => {
+  const result = buildInstallInstructions([
+    'Mods/CheaperInnardsUpgrades/Scripts/main.lua',
+    'Mods/CheaperInnardsUpgrades/UpgradeCosts.json',
+    'Mods/mods.txt',
+  ]);
+
+  assert.equal(result.kind, 'ue4ss-mod');
+  assert.equal(result.modType, MOD_TYPES.UE4SS_MODS);
+  assert.deepEqual(result.warnings, ['ue4ss-loader-missing']);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('CheaperInnardsUpgrades', 'Scripts', 'main.lua'),
+    path.join('CheaperInnardsUpgrades', 'UpgradeCosts.json'),
+    'mods.txt',
+  ].sort());
+});
+
+test('mixed UE4SS mod and PAK archive routes each part from game root', () => {
+  const result = buildInstallInstructions([
+    'CheaperInnards/ue4ss/Mods/CheaperInnards/enabled.txt',
+    'CheaperInnards/ue4ss/Mods/CheaperInnards/Scripts/main.lua',
+    'CheaperInnards/Paks/CheaperInnards_P.pak',
+    'CheaperInnards/Paks/CheaperInnards_P.ucas',
+    'CheaperInnards/Paks/CheaperInnards_P.utoc',
+  ]);
+
+  assert.equal(result.kind, 'mixed-ue4ss-pak');
+  assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
+  assert.deepEqual(result.warnings, ['ue4ss-loader-missing']);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'CheaperInnards', 'Scripts', 'main.lua'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'CheaperInnards', 'enabled.txt'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnards_P.pak'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnards_P.ucas'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnards_P.utoc'),
+  ].sort());
+});
+
+test('mixed UE4SS loader package and root PAK archive routes from game root', () => {
+  const result = buildInstallInstructions([
+    'Combo/dwmapi.dll',
+    'Combo/ue4ss/UE4SS.dll',
+    'Combo/ue4ss/Mods/Threshold/enabled.txt',
+    'Combo/Increased Hunter Killers Spawn Threshold_P.pak',
+    'Combo/Increased Hunter Killers Spawn Threshold_P.ucas',
+    'Combo/Increased Hunter Killers Spawn Threshold_P.utoc',
+  ]);
+
+  assert.equal(result.kind, 'mixed-ue4ss-pak');
+  assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
+  assert.deepEqual(result.warnings, []);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'dwmapi.dll'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'Threshold', 'enabled.txt'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'UE4SS.dll'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Increased Hunter Killers Spawn Threshold_P.pak'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Increased Hunter Killers Spawn Threshold_P.ucas'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Increased Hunter Killers Spawn Threshold_P.utoc'),
   ].sort());
 });
 

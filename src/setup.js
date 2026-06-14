@@ -26,9 +26,10 @@ function statExists(fsModule, filePath) {
 async function hasSignatureBypassInstalled(gamePath, fsModule) {
   const win64 = path.join(gamePath, WIN64_PATH);
   const dsound = await statExists(fsModule, path.join(win64, 'dsound.dll'));
+  const version = await statExists(fsModule, path.join(win64, 'version.dll'));
   const bitfixFolder = await statExists(fsModule, path.join(win64, 'bitfix'));
   const bitfixText = await statExists(fsModule, path.join(win64, 'bitfix.txt'));
-  return dsound && (bitfixFolder || bitfixText);
+  return (dsound || version) && (bitfixFolder || bitfixText);
 }
 
 async function prepareForModding(api, discovery, fsModule, util) {

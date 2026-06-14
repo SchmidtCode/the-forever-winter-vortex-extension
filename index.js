@@ -7,8 +7,8 @@ const {
   MOD_TYPES,
   PAKS_MODS_PATH,
   PAKS_ROOT_PATH,
-  SIGNATURE_BYPASS_URL,
   STEAM_APP_ID,
+  UE4SS_RELEASES_URL,
   UE4SS_MODS_PATH,
   WIN64_PATH,
 } = require('./src/constants');
@@ -49,42 +49,28 @@ function absoluteGamePath(context, relPath) {
   };
 }
 
-function notifySignatureBypassManualInstall(api) {
-  api.sendNotification({
-    id: 'tfw-signature-bypass-manual-install',
-    type: 'warning',
-    title: 'Install Signature Bypass manually',
-    message: 'This archive looks like Signature Bypass. The extension does not deploy or redistribute it; follow the mod page instructions and extract it to the game Win64 folder.',
-    actions: [
-      {
-        title: 'Open Signature Bypass page',
-        action: () => util.opn(SIGNATURE_BYPASS_URL).catch(() => undefined),
-      },
-    ],
-  });
-}
-
 function notifyUE4SSLoaderMissing(api) {
   api.sendNotification({
     id: 'tfw-ue4ss-loader-missing',
     type: 'warning',
     title: 'UE4SS loader may be required',
     message: 'This looks like a UE4SS mod without loader files. Vortex will install it, but it will only run if UE4SS is already installed in the game Win64 folder.',
+    actions: [
+      {
+        title: 'Open UE4SS releases',
+        action: () => util.opn(UE4SS_RELEASES_URL).catch(() => undefined),
+      },
+    ],
   });
 }
 
 function installSignatureBypass(context, files) {
-  if (isSignatureBypassArchive(files)) {
-    notifySignatureBypassManualInstall(context.api);
-  }
-  return Promise.resolve({ instructions: [] });
+  const result = buildInstallInstructions(files);
+  return Promise.resolve({ instructions: result.instructions });
 }
 
 function installContent(context, files) {
   const result = buildInstallInstructions(files);
-  if (result.kind === 'signature-bypass') {
-    notifySignatureBypassManualInstall(context.api);
-  }
   if (result.warnings.includes('ue4ss-loader-missing')) {
     notifyUE4SSLoaderMissing(context.api);
   }
@@ -117,7 +103,7 @@ function main(context) {
   });
 
   context.registerInstaller(
-    'tfw-signature-bypass-manual',
+    'tfw-signature-bypass-win64',
     15,
     testSupportedSignatureBypass,
     (files) => installSignatureBypass(context, files),

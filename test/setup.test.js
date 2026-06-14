@@ -36,6 +36,17 @@ test('Signature Bypass detector requires dsound and bitfix marker', async () => 
   assert.equal(await hasSignatureBypassInstalled(gamePath, fsModule), true);
 });
 
+test('Signature Bypass detector accepts version dll with bitfix marker', async () => {
+  const gamePath = path.join('C:', 'Steam', 'steamapps', 'common', 'The Forever Winter');
+  const win64 = path.join(gamePath, WIN64_PATH);
+  const fsModule = mockFs([
+    path.join(win64, 'version.dll'),
+    path.join(win64, 'bitfix'),
+  ]);
+
+  assert.equal(await hasSignatureBypassInstalled(gamePath, fsModule), true);
+});
+
 test('missing Signature Bypass produces warning notification metadata', () => {
   const util = { opn: () => Promise.resolve() };
   const notification = missingSignatureBypassNotification(util);
