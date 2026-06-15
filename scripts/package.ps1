@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $root = Resolve-Path (Join-Path $PSScriptRoot "..")
 $dist = Join-Path $root "dist"
 $staging = Join-Path $dist "the-forever-winter"
-$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-0.0.1.zip"
+$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-0.0.2.zip"
 
 if (Test-Path $staging) {
   Remove-Item -LiteralPath $staging -Recurse -Force
@@ -22,6 +22,7 @@ Copy-Item -LiteralPath (Join-Path $root "CHANGELOG.md") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "LICENSE") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "src\constants.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\installers.js") -Destination (Join-Path $staging "src")
+Copy-Item -LiteralPath (Join-Path $root "src\pak-deploy.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\setup.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-deploy.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-manifest.js") -Destination (Join-Path $staging "src")

@@ -32,6 +32,19 @@ This extension registers the Steam release, creates the common PAK `Mods` folder
 
 Unknown bare PAK triplets intentionally default to `Windows\ForeverWinter\Content\Paks\Mods`. Root-Paks support should grow through specific filename rules and user reports.
 
+## Deployment Method Notes
+
+The game and Signature Bypass appear most reliable when Unreal container files are real files in the game folder. If Vortex deploys `.pak`, `.ucas`, or `.utoc` files as symbolic links, some setups may crash on startup even though the same files work when copied manually.
+
+After each Vortex deploy, this extension checks the The Forever Winter PAK folders and replaces symlinked `.pak`, `.ucas`, and `.utoc` files with physical copies from the Vortex staging target. This only touches deployed Unreal container files in:
+
+```text
+Windows\ForeverWinter\Content\Paks
+Windows\ForeverWinter\Content\Paks\Mods
+```
+
+If you still see deployment or permission errors, switch Vortex to **Hardlink Deployment** or **Copy Deployment** if available, then purge and redeploy. For Steam installs under `C:\Program Files (x86)`, Windows permissions may block some deployment methods unless Vortex runs as administrator. A Steam library outside Program Files, such as `C:\Games\SteamLibrary` or another drive, is usually easier for Vortex to manage.
+
 ## UE4SS Notes
 
 UE4SS is a general Unreal Engine mod loader, not a The Forever Winter-specific Nexus file. The official releases are here:

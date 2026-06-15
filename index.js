@@ -19,6 +19,7 @@ const {
   testSupportedContent,
   testSupportedSignatureBypass,
 } = require('./src/installers');
+const { materializePakSymlinks } = require('./src/pak-deploy');
 const { prepareForModding } = require('./src/setup');
 const { regenerateUE4SSManifests } = require('./src/ue4ss-deploy');
 
@@ -31,6 +32,7 @@ function loadVortexApi() {
 }
 
 const { fs, util } = loadVortexApi();
+const nodeFs = require('fs');
 
 function findGame() {
   return util.GameStoreHelper.findByAppId([STEAM_APP_ID])
@@ -129,13 +131,30 @@ function notifyUE4SSManifestFailed(api, error) {
   });
 }
 
-async function regenerateUE4SSManifestsForContext(context, profileId) {
+function notifyPakMaterializationFailed(api, result) {
+  const firstError = result.errors[0];
+  api.sendNotification({
+    id: 'tfw-pak-symlink-materialize-failed',
+    type: 'warning',
+    title: 'PAK deployment needs attention',
+    message: `Vortex deployed PAK files, but the extension could not replace every symlink with a physical file. First error: ${firstError.message}`,
+  });
+}
+
+async function postDeployForContext(context, profileId) {
   if (!isTheForeverWinterProfile(context, profileId)) {
     return;
   }
 
+  const gamePath = getDiscoveredGamePath(context);
+
+  const pakResult = await materializePakSymlinks(gamePath, nodeFs);
+  if (pakResult.errors.length > 0) {
+    notifyPakMaterializationFailed(context.api, pakResult);
+  }
+
   try {
-    await regenerateUE4SSManifests(fs, getDiscoveredGamePath(context));
+    await regenerateUE4SSManifests(fs, gamePath);
   } catch (err) {
     notifyUE4SSManifestFailed(context.api, err);
   }
@@ -145,7 +164,7 @@ function registerUE4SSManifestEvents(context) {
   const register = () => {
     if (typeof context.api.onAsync === 'function') {
       context.api.onAsync('did-deploy', (profileId) =>
-        regenerateUE4SSManifestsForContext(context, profileId));
+        postDeployForContext(context, profileId));
     }
   };
 
@@ -217,7 +236,7 @@ function main(context) {
     (gameId) => gameId === GAME_ID,
     absoluteGamePath(context, PAKS_MODS_PATH),
     (instructions) => Promise.resolve(modTypeTest(instructions, MOD_TYPES.PAKS_MODS)),
-    { name: 'TFW PAKs Mods', mergeMods: true },
+    { name: 'TFW PAKs Mods', mergeMods: true, deploymentEssential: true },
   );
 
   context.registerModType(
@@ -226,7 +245,7 @@ function main(context) {
     (gameId) => gameId === GAME_ID,
     absoluteGamePath(context, PAKS_ROOT_PATH),
     (instructions) => Promise.resolve(modTypeTest(instructions, MOD_TYPES.PAKS_ROOT)),
-    { name: 'TFW PAKs Root', mergeMods: true },
+    { name: 'TFW PAKs Root', mergeMods: true, deploymentEssential: true },
   );
 
   context.registerModType(
@@ -235,7 +254,7 @@ function main(context) {
     (gameId) => gameId === GAME_ID,
     absoluteGamePath(context, WIN64_PATH),
     (instructions) => Promise.resolve(modTypeTest(instructions, MOD_TYPES.WIN64_ROOT)),
-    { name: 'TFW Win64 Root', mergeMods: true },
+    { name: 'TFW Win64 Root', mergeMods: true, deploymentEssential: true },
   );
 
   context.registerModType(
@@ -244,7 +263,7 @@ function main(context) {
     (gameId) => gameId === GAME_ID,
     absoluteGamePath(context, UE4SS_MODS_PATH),
     (instructions) => Promise.resolve(modTypeTest(instructions, MOD_TYPES.UE4SS_MODS)),
-    { name: 'TFW UE4SS Mods', mergeMods: true },
+    { name: 'TFW UE4SS Mods', mergeMods: true, deploymentEssential: true },
   );
 
   context.registerModType(
@@ -253,7 +272,7 @@ function main(context) {
     (gameId) => gameId === GAME_ID,
     absoluteGamePath(context, ''),
     (instructions) => Promise.resolve(modTypeTest(instructions, MOD_TYPES.GAME_ROOT)),
-    { name: 'TFW Game Root', mergeMods: true },
+    { name: 'TFW Game Root', mergeMods: true, deploymentEssential: true },
   );
 
   registerUE4SSManifestEvents(context);

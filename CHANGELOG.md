@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.2-beta
+
+- Mark The Forever Winter mod types as deployment-essential.
+- Materialize symlinked `.pak`, `.ucas`, and `.utoc` deployments into physical files after deploy.
+- Include the new PAK deployment runtime helper in the release package.
+- Document Vortex deployment method guidance for PAK container files.
+
 ## 0.0.1-beta
 
 - Register The Forever Winter as a Vortex game extension for Steam app `2828860`.
