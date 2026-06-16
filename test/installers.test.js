@@ -147,6 +147,29 @@ test('official UE4SS basic release archive routes loader package to Win64 root',
   ].sort());
 });
 
+test('experimental UE4SS subfolder release archive preserves modern loader layout', () => {
+  const result = buildInstallInstructions([
+    'UE4SS_experimental/dwmapi.dll',
+    'UE4SS_experimental/ue4ss/UE4SS.dll',
+    'UE4SS_experimental/ue4ss/UE4SS-settings.ini',
+    'UE4SS_experimental/ue4ss/Mods/mods.txt',
+    'UE4SS_experimental/ue4ss/Mods/Keybinds/Scripts/main.lua',
+    'UE4SS_experimental/ue4ss/UE4SS_Signatures/FName.ini',
+    'UE4SS_experimental/README.md',
+  ]);
+
+  assert.equal(result.kind, 'ue4ss-win64');
+  assert.equal(result.modType, MOD_TYPES.WIN64_ROOT);
+  assert.deepEqual(copyDestinations(result), [
+    'dwmapi.dll',
+    path.join('ue4ss', 'Mods', 'Keybinds', 'Scripts', 'main.lua'),
+    path.join('ue4ss', 'Mods', 'mods.txt'),
+    path.join('ue4ss', 'UE4SS-settings.ini'),
+    path.join('ue4ss', 'UE4SS.dll'),
+    path.join('ue4ss', 'UE4SS_Signatures', 'FName.ini'),
+  ].sort());
+});
+
 test('Cheaper Innards-style archive installs only content mod files and PAKs', () => {
   const result = buildInstallInstructions([
     'CheaperInnards/dwmapi.dll',

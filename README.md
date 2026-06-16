@@ -51,7 +51,11 @@ UE4SS is a general Unreal Engine mod loader, not a The Forever Winter-specific N
 
 https://github.com/UE4SS-RE/RE-UE4SS/releases
 
-For normal mod use, prefer the latest non-dev `UE4SS_v...` release unless a mod author tells you to use a specific build. Download the UE4SS zip yourself, then add it to Vortex with drag-and-drop or **Install From File**. The extension supports both common UE4SS loader layouts:
+For The Forever Winter, prefer UE4SS `experimental-latest` unless a mod author tells you to use a specific build. Current experimental builds include newer UE 5.4 scan support and use the cleaner subfolder layout this extension targets: `dwmapi.dll` in `Win64`, with `UE4SS.dll`, `UE4SS-settings.ini`, signatures, and mods under `Win64\ue4ss`. Download the UE4SS zip yourself, then add it to Vortex with drag-and-drop or **Install From File**.
+
+UE4SS v3.0.1 used the older root layout where `UE4SS.dll`, `UE4SS-settings.ini`, and `Mods` sit directly in `Win64`. The extension can route that archive, but separately installed UE4SS mods are deployed to `Win64\ue4ss\Mods`; with the old root layout, UE4SS will ignore those mods unless `ModsFolderPath = ue4ss\Mods` is set in `UE4SS-settings.ini`. After deployment, the extension warns if it detects that old root layout alongside deployed `ue4ss\Mods` content.
+
+The extension supports these common UE4SS loader layouts:
 
 - Official/basic layout with `dwmapi.dll`, `UE4SS.dll`, `UE4SS-settings.ini`, `Mods\...`, and `UE4SS_Signatures\...`
 - Game-specific layout with `dwmapi.dll` next to a `ue4ss\...` folder
@@ -171,7 +175,7 @@ Build a release zip containing only runtime extension files:
 npm run package
 ```
 
-The package is written to `dist/the-forever-winter-vortex-extension-0.0.1.zip`.
+The package is written to `dist/the-forever-winter-vortex-extension-0.0.3.zip`.
 
 ## Manual Smoke Test
 
@@ -180,5 +184,7 @@ The package is written to `dist/the-forever-winter-vortex-extension-0.0.1.zip`.
 - Managing the game creates `Windows\ForeverWinter\Content\Paks\Mods`.
 - Missing Signature Bypass shows the warning notification.
 - A user-downloaded Signature Bypass archive installs `dsound.dll`, `bitfix\...`, and `bitfix*` files to `Windows\ForeverWinter\Binaries\Win64`.
+- UE4SS `experimental-latest` installs `dwmapi.dll` to `Windows\ForeverWinter\Binaries\Win64` and UE4SS runtime files to `Windows\ForeverWinter\Binaries\Win64\ue4ss`.
+- A legacy root-layout UE4SS install plus deployed `ue4ss\Mods` content shows the UE4SS legacy layout warning.
 - A mixed UE4SS plus PAK archive deploys the actual UE4SS mod folder and PAK triplet while skipping bundled dependency/runtime files.
 - Sample archives deploy to their expected folders and uninstall cleanly.

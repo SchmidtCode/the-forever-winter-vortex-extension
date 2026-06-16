@@ -1,6 +1,6 @@
 {
   "name": "the-forever-winter-vortex-extension",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Beta Vortex support for The Forever Winter.",
   "main": "index.js",

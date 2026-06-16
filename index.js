@@ -131,6 +131,21 @@ function notifyUE4SSManifestFailed(api, error) {
   });
 }
 
+function notifyUE4SSLegacyLayout(api) {
+  api.sendNotification({
+    id: 'tfw-ue4ss-legacy-root-layout',
+    type: 'warning',
+    title: 'UE4SS legacy layout detected',
+    message: 'UE4SS is installed in the old Win64 root layout, but this extension deploys UE4SS mods to Win64\\ue4ss\\Mods. Install UE4SS experimental-latest, or set ModsFolderPath = ue4ss\\Mods in UE4SS-settings.ini.',
+    actions: [
+      {
+        title: 'Open UE4SS releases',
+        action: () => util.opn(UE4SS_RELEASES_URL).catch(() => undefined),
+      },
+    ],
+  });
+}
+
 function notifyPakMaterializationFailed(api, result) {
   const firstError = result.errors[0];
   api.sendNotification({
@@ -139,6 +154,21 @@ function notifyPakMaterializationFailed(api, result) {
     title: 'PAK deployment needs attention',
     message: `Vortex deployed PAK files, but the extension could not replace every symlink with a physical file. First error: ${firstError.message}`,
   });
+}
+
+async function warnForUE4SSLegacyLayout(context, gamePath) {
+  if (gamePath === undefined) {
+    return;
+  }
+
+  const win64 = path.join(gamePath, WIN64_PATH);
+  const hasRootDll = await statExists(path.join(win64, 'UE4SS.dll'));
+  const hasFolderDll = await statExists(path.join(win64, 'ue4ss', 'UE4SS.dll'));
+  const hasModernMods = await statExists(path.join(gamePath, UE4SS_MODS_PATH));
+
+  if (hasRootDll && !hasFolderDll && hasModernMods) {
+    notifyUE4SSLegacyLayout(context.api);
+  }
 }
 
 async function postDeployForContext(context, profileId) {
@@ -158,6 +188,8 @@ async function postDeployForContext(context, profileId) {
   } catch (err) {
     notifyUE4SSManifestFailed(context.api, err);
   }
+
+  await warnForUE4SSLegacyLayout(context, gamePath);
 }
 
 function registerUE4SSManifestEvents(context) {

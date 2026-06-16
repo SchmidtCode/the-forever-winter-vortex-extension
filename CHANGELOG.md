@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.3-beta
+
+- Prefer and document the UE4SS `experimental-latest` subfolder layout for The Forever Winter.
+- Preserve modern UE4SS archives with `dwmapi.dll` in Win64 and runtime files under `Win64\ue4ss`.
+- Warn when a legacy root-layout UE4SS install is present alongside deployed `Win64\ue4ss\Mods` content.
+
 ## 0.0.2-beta
 
 - Mark The Forever Winter mod types as deployment-essential.
