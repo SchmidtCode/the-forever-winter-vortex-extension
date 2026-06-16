@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.0.5-beta
+
+- Restore post-deploy materialization of symlinked `.pak`, `.ucas`, and `.utoc` files because The Forever Winter can crash when those files remain symlinks.
+- Preserve staged file timestamps and mode when materializing PAK containers to reduce Vortex External Changes prompts.
+- Document choosing **Use newer file** if Vortex still reports materialized PAK containers as external changes.
+
+## 0.0.4-beta
+
+- Stop rewriting deployed `.pak`, `.ucas`, and `.utoc` symlinks after deployment to avoid Vortex External Changes prompts.
+- Warn when PAK container files are deployed as symlinks so users can switch to Hardlink or Copy Deployment and redeploy.
+- Reroute game-root archives that incorrectly place PAK triplets under `Win64\ue4ss\Mods` or `Win64\Mods` back to normal PAK folders.
+
 ## 0.0.3-beta
 
 - Prefer and document the UE4SS `experimental-latest` subfolder layout for The Forever Winter.
@@ -9,7 +21,6 @@
 ## 0.0.2-beta
 
 - Mark The Forever Winter mod types as deployment-essential.
-- Materialize symlinked `.pak`, `.ucas`, and `.utoc` deployments into physical files after deploy.
 - Include the new PAK deployment runtime helper in the release package.
 - Document Vortex deployment method guidance for PAK container files.
 

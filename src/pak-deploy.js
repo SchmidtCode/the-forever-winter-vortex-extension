@@ -33,12 +33,16 @@ async function materializeSymlinkFile(nodeFs, filePath) {
   const target = path.isAbsolute(rawTarget)
     ? rawTarget
     : path.resolve(path.dirname(filePath), rawTarget);
+  const targetStat = await nodeFs.promises.stat(target);
   const tempPath = `${filePath}.tfw-materialize-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
   try {
     await nodeFs.promises.copyFile(target, tempPath);
+    await nodeFs.promises.chmod(tempPath, targetStat.mode).catch(() => undefined);
+    await nodeFs.promises.utimes(tempPath, targetStat.atime, targetStat.mtime).catch(() => undefined);
     await nodeFs.promises.unlink(filePath);
     await nodeFs.promises.rename(tempPath, filePath);
+    await nodeFs.promises.utimes(filePath, targetStat.atime, targetStat.mtime).catch(() => undefined);
     return true;
   } catch (err) {
     await nodeFs.promises.rm(tempPath, { force: true }).catch(() => undefined);
@@ -50,6 +54,7 @@ async function materializePakSymlinks(gamePath, nodeFs = require('fs')) {
   const result = {
     checked: 0,
     materialized: 0,
+    files: [],
     errors: [],
   };
 
@@ -75,6 +80,7 @@ async function materializePakSymlinks(gamePath, nodeFs = require('fs')) {
       try {
         if (await materializeSymlinkFile(nodeFs, filePath)) {
           result.materialized += 1;
+          result.files.push(filePath);
         }
       } catch (err) {
         result.errors.push({

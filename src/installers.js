@@ -324,6 +324,24 @@ function isBundledDependencyGameRootDestination(destination) {
   return false;
 }
 
+function isMisplacedUE4SSPakDestination(destination) {
+  const normalized = normalizeArchivePath(destination).toLowerCase();
+  const win64 = normalizeArchivePath(WIN64_PATH).toLowerCase();
+  return PAK_EXTENSIONS.has(extension(destination))
+    && (
+      normalized.startsWith(`${win64}/ue4ss/mods/`)
+      || normalized.startsWith(`${win64}/mods/`)
+    );
+}
+
+function normalizeGameRootDestination(file, destination) {
+  if (isMisplacedUE4SSPakDestination(destination)) {
+    return path.join(pakTargetPath(pakModType([file])), basename(destination));
+  }
+
+  return destination;
+}
+
 function installGameRoot(files) {
   const instructions = [setModTypeInstruction(MOD_TYPES.GAME_ROOT)];
   const skipBundledDependencies = hasDeployableUE4SSMod(files) || (hasUE4SS(files) && hasPakFile(files));
@@ -334,7 +352,7 @@ function installGameRoot(files) {
       if (skipBundledDependencies && isBundledDependencyGameRootDestination(destination)) {
         continue;
       }
-      instructions.push(copyInstruction(file, destination));
+      instructions.push(copyInstruction(file, normalizeGameRootDestination(file, destination)));
     }
   }
   return {
