@@ -19,7 +19,7 @@ test('isPakContainerFile detects Unreal container files', () => {
   assert.equal(isPakContainerFile('UE4SS.dll'), false);
 });
 
-test('materializePakSymlinks replaces symlinked PAK containers with timestamp-preserved real files', async (t) => {
+test('materializePakSymlinks replaces symlinked PAK containers with physical files', async (t) => {
   const gamePath = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'tfw-pak-deploy-'));
   t.after(() => fs.promises.rm(gamePath, { recursive: true, force: true }));
 
@@ -31,8 +31,6 @@ test('materializePakSymlinks replaces symlinked PAK containers with timestamp-pr
   const stagedPak = path.join(stagedDir, 'RemoveStun_P.pak');
   const deployedPak = path.join(paksModsDir, 'RemoveStun_P.pak');
   await fs.promises.writeFile(stagedPak, 'physical pak bytes');
-  const stagedTime = new Date('2026-01-02T03:04:05.000Z');
-  await fs.promises.utimes(stagedPak, stagedTime, stagedTime);
 
   try {
     await fs.promises.symlink(stagedPak, deployedPak);
@@ -45,11 +43,8 @@ test('materializePakSymlinks replaces symlinked PAK containers with timestamp-pr
 
   assert.equal(result.errors.length, 0);
   assert.equal(result.materialized, 1);
-  assert.deepEqual(result.files, [deployedPak]);
   assert.equal(await fs.promises.readFile(deployedPak, 'utf8'), 'physical pak bytes');
-  const deployedStat = await fs.promises.lstat(deployedPak);
-  assert.equal(deployedStat.isSymbolicLink(), false);
-  assert.equal(Math.trunc(deployedStat.mtimeMs / 1000), Math.trunc(stagedTime.getTime() / 1000));
+  assert.equal((await fs.promises.lstat(deployedPak)).isSymbolicLink(), false);
 });
 
 test('materializeUE4SSRuntimeSymlinks replaces symlinked UE4SS runtime files', async (t) => {

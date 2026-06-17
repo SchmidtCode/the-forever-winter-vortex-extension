@@ -146,23 +146,13 @@ function notifyUE4SSLegacyLayout(api) {
   });
 }
 
-function notifyPakSymlinksMaterialized(api, result) {
-  const count = result.materialized;
-  api.sendNotification({
-    id: 'tfw-pak-symlinks-materialized',
-    type: 'info',
-    title: 'PAK files converted for game compatibility',
-    message: `The extension replaced ${count} symlinked Unreal container file${count === 1 ? '' : 's'} with real files so The Forever Winter can load them.`,
-  });
-}
-
 function notifyPakMaterializationFailed(api, result) {
   const firstError = result.errors[0];
   api.sendNotification({
     id: 'tfw-pak-symlink-materialize-failed',
     type: 'warning',
     title: 'PAK deployment needs attention',
-    message: `Vortex deployed PAK files, but the extension could not replace every symlink with a real file. First error: ${firstError.message}`,
+    message: `Vortex deployed PAK files, but the extension could not replace every symlink with a physical file. First error: ${firstError.message}`,
   });
 }
 
@@ -211,8 +201,6 @@ async function postDeployForContext(context, profileId) {
   const pakResult = await materializePakSymlinks(gamePath, nodeFs);
   if (pakResult.errors.length > 0) {
     notifyPakMaterializationFailed(context.api, pakResult);
-  } else if (pakResult.materialized > 0) {
-    notifyPakSymlinksMaterialized(context.api, pakResult);
   }
 
   const ue4ssRuntimeResult = await materializeUE4SSRuntimeSymlinks(gamePath, nodeFs);

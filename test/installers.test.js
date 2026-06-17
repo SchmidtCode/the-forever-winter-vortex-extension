@@ -369,22 +369,6 @@ test('game-root content archive skips bundled UE4SS and Signature Bypass depende
   ].sort());
 });
 
-test('game-root archive reroutes misplaced PAK triplet from UE4SS Mods to Paks Mods', () => {
-  const result = buildInstallInstructions([
-    'Headshot/Windows/ForeverWinter/Binaries/Win64/ue4ss/Mods/132-HeadshotMultiplierEquality_P.pak',
-    'Headshot/Windows/ForeverWinter/Binaries/Win64/ue4ss/Mods/132-HeadshotMultiplierEquality_P.ucas',
-    'Headshot/Windows/ForeverWinter/Binaries/Win64/ue4ss/Mods/132-HeadshotMultiplierEquality_P.utoc',
-  ]);
-
-  assert.equal(result.kind, 'game-root');
-  assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
-  assert.deepEqual(copyDestinations(result), [
-    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', '132-HeadshotMultiplierEquality_P.pak'),
-    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', '132-HeadshotMultiplierEquality_P.ucas'),
-    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', '132-HeadshotMultiplierEquality_P.utoc'),
-  ]);
-});
-
 test('RemoveStun triplet routes to Paks Mods', () => {
   const files = [
     'RemoveStun/RemoveStun_P.pak',

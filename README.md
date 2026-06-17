@@ -32,22 +32,18 @@ This extension registers the Steam release, creates the common PAK `Mods` folder
 
 Unknown bare PAK triplets intentionally default to `Windows\ForeverWinter\Content\Paks\Mods`. Root-Paks support should grow through specific filename rules and user reports.
 
-If an archive incorrectly puts Unreal container files under `Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods` or `Windows\ForeverWinter\Binaries\Win64\Mods`, the extension treats those `.pak`, `.ucas`, and `.utoc` files as misplaced PAK content and routes them back to the normal PAK folders.
-
 ## Deployment Method Notes
 
 The game and Signature Bypass appear most reliable when Unreal container files are real files in the game folder. If Vortex deploys `.pak`, `.ucas`, or `.utoc` files as symbolic links, some setups may crash on startup even though the same files work when copied manually.
 
-After each Vortex deploy, this extension checks the The Forever Winter PAK folders and replaces symlinked `.pak`, `.ucas`, and `.utoc` files with real files copied from the Vortex staging target. It preserves the staged file timestamps while doing this to reduce Vortex External Changes prompts. This only touches deployed Unreal container files in:
+After each Vortex deploy, this extension checks the The Forever Winter PAK folders and replaces symlinked `.pak`, `.ucas`, and `.utoc` files with physical copies from the Vortex staging target. This only touches deployed Unreal container files in:
 
 ```text
 Windows\ForeverWinter\Content\Paks
 Windows\ForeverWinter\Content\Paks\Mods
 ```
 
-If Vortex still reports External Changes for these PAK files, choose **Use newer file** for the affected `.pak`, `.ucas`, and `.utoc` entries. If you see deployment or permission errors, or PAK mods do not load, switch Vortex to **Hardlink Deployment** or **Copy Deployment** if available, then purge and redeploy. For Steam installs under `C:\Program Files (x86)`, Windows permissions may block some deployment methods unless Vortex runs as administrator. A Steam library outside Program Files, such as `C:\Games\SteamLibrary` or another drive, is usually easier for Vortex to manage.
-
-The extension also converts symlinked UE4SS runtime files to real files after deployment: `dwmapi.dll`, `ue4ss\UE4SS.dll`, and `ue4ss\UE4SS-settings.ini`. This is intended to make Vortex-managed UE4SS behave more like a manual install, especially when testing the UE4SS GUI console.
+If you still see deployment or permission errors, switch Vortex to **Hardlink Deployment** or **Copy Deployment** if available, then purge and redeploy. For Steam installs under `C:\Program Files (x86)`, Windows permissions may block some deployment methods unless Vortex runs as administrator. A Steam library outside Program Files, such as `C:\Games\SteamLibrary` or another drive, is usually easier for Vortex to manage.
 
 ## UE4SS Notes
 
@@ -80,8 +76,6 @@ Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods
 If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`.
 
 Some The Forever Winter mod archives bundle their own copy of UE4SS, Signature Bypass, or shared UE4SS helper files alongside the actual mod. Those bundled dependency files are intentionally skipped when the archive also contains a real UE4SS mod folder. Install UE4SS and Signature Bypass as their own Vortex mods, then install content mods like NoRecoil or Cheaper Innards Upgrades on top. This avoids Vortex conflicts over shared files such as `dwmapi.dll`, `UE4SS.dll`, `UE4SS-settings.ini`, `mods.txt`, `mods.json`, `Keybinds`, `shared`, `dsound.dll`, and `bitfix`.
-
-Some UE4SS mods, including Cheaper Innards Upgrades, include both a bundled `ue4ss\Mods` runtime folder and a separate root `Mods` folder that the author expects you to copy into `Win64\ue4ss`. The extension skips the bundled runtime copy under `ue4ss\Mods`, but it does deploy the separate root `Mods` content, including mod-provided `BPModLoaderMod`, `shared`, and the actual mod folder. This better matches the manual install instructions without replacing your separately installed UE4SS loader.
 
 After Vortex deploys mods, the extension regenerates shared UE4SS manifests from the deployed folders in `Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods`. It writes both:
 
@@ -181,7 +175,7 @@ Build a release zip containing only runtime extension files:
 npm run package
 ```
 
-The package is written to `dist/the-forever-winter-vortex-extension-0.0.7.zip`.
+The package is written to `dist/the-forever-winter-vortex-extension-0.0.3.zip`.
 
 ## Manual Smoke Test
 

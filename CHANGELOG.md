@@ -1,13 +1,5 @@
 # Changelog
 
-## 0.0.7-beta
-
-- Materialize symlinked UE4SS runtime files after deployment (`dwmapi.dll`, `ue4ss\UE4SS.dll`, and `ue4ss\UE4SS-settings.ini`) so Vortex installs more closely match manual UE4SS installs.
-
-## 0.0.6-beta
-
-- Deploy root `Mods\...` content from Cheaper Innards-style archives, including mod-provided `BPModLoaderMod` and `shared` files, while still skipping bundled UE4SS loader/runtime files.
-
 ## 0.0.5-beta
 
 - Restore post-deploy materialization of symlinked `.pak`, `.ucas`, and `.utoc` files because The Forever Winter can crash when those files remain symlinks.
@@ -29,6 +21,7 @@
 ## 0.0.2-beta
 
 - Mark The Forever Winter mod types as deployment-essential.
+- Materialize symlinked `.pak`, `.ucas`, and `.utoc` deployments into physical files after deploy.
 - Include the new PAK deployment runtime helper in the release package.
 - Document Vortex deployment method guidance for PAK container files.
 

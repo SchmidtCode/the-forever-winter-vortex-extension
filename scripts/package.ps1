@@ -3,7 +3,7 @@ $ErrorActionPreference = "Stop"
 $root = Resolve-Path (Join-Path $PSScriptRoot "..")
 $dist = Join-Path $root "dist"
 $staging = Join-Path $dist "the-forever-winter"
-$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-0.0.7.zip"
+$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-0.0.5.zip"
 
 if (Test-Path $staging) {
   Remove-Item -LiteralPath $staging -Recurse -Force
