@@ -19,7 +19,7 @@ const {
   testSupportedContent,
   testSupportedSignatureBypass,
 } = require('./src/installers');
-const { materializePakSymlinks } = require('./src/pak-deploy');
+const { materializePakSymlinks, materializeUE4SSRuntimeSymlinks } = require('./src/pak-deploy');
 const { prepareForModding } = require('./src/setup');
 const { regenerateUE4SSManifests } = require('./src/ue4ss-deploy');
 
@@ -166,6 +166,26 @@ function notifyPakMaterializationFailed(api, result) {
   });
 }
 
+function notifyUE4SSRuntimeMaterialized(api, result) {
+  const count = result.materialized;
+  api.sendNotification({
+    id: 'tfw-ue4ss-runtime-symlinks-materialized',
+    type: 'info',
+    title: 'UE4SS runtime files converted',
+    message: `The extension replaced ${count} symlinked UE4SS runtime file${count === 1 ? '' : 's'} with real files to better match a manual UE4SS install.`,
+  });
+}
+
+function notifyUE4SSRuntimeMaterializationFailed(api, result) {
+  const firstError = result.errors[0];
+  api.sendNotification({
+    id: 'tfw-ue4ss-runtime-symlink-materialize-failed',
+    type: 'warning',
+    title: 'UE4SS deployment needs attention',
+    message: `Vortex deployed UE4SS runtime files, but the extension could not replace every symlink with a real file. First error: ${firstError.message}`,
+  });
+}
+
 async function warnForUE4SSLegacyLayout(context, gamePath) {
   if (gamePath === undefined) {
     return;
@@ -193,6 +213,13 @@ async function postDeployForContext(context, profileId) {
     notifyPakMaterializationFailed(context.api, pakResult);
   } else if (pakResult.materialized > 0) {
     notifyPakSymlinksMaterialized(context.api, pakResult);
+  }
+
+  const ue4ssRuntimeResult = await materializeUE4SSRuntimeSymlinks(gamePath, nodeFs);
+  if (ue4ssRuntimeResult.errors.length > 0) {
+    notifyUE4SSRuntimeMaterializationFailed(context.api, ue4ssRuntimeResult);
+  } else if (ue4ssRuntimeResult.materialized > 0) {
+    notifyUE4SSRuntimeMaterialized(context.api, ue4ssRuntimeResult);
   }
 
   try {

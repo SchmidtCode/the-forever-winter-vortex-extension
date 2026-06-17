@@ -185,8 +185,10 @@ test('Cheaper Innards-style archive installs only content mod files and PAKs', (
     'CheaperInnards/ue4ss/Mods/mods.json',
     'CheaperInnards/ue4ss/Mods/mods.txt',
     'CheaperInnards/Mods/mods.txt',
+    'CheaperInnards/Mods/BPModLoaderMod/Scripts/main.lua',
     'CheaperInnards/Mods/CheaperInnardsUpgrades/Scripts/main.lua',
     'CheaperInnards/Mods/CheaperInnardsUpgrades/UpgradeCosts.json',
+    'CheaperInnards/Mods/shared/json.lua',
     'CheaperInnards/Paks/CheaperInnardsUpgrades_P.pak',
     'CheaperInnards/Paks/CheaperInnardsUpgrades_P.ucas',
     'CheaperInnards/Paks/CheaperInnardsUpgrades_P.utoc',
@@ -196,11 +198,50 @@ test('Cheaper Innards-style archive installs only content mod files and PAKs', (
   assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
   assert.deepEqual(result.warnings, ['ue4ss-loader-missing']);
   assert.deepEqual(copyDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'BPModLoaderMod', 'Scripts', 'main.lua'),
     path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'CheaperInnardsUpgrades', 'Scripts', 'main.lua'),
     path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'CheaperInnardsUpgrades', 'UpgradeCosts.json'),
+    path.join('Windows', 'ForeverWinter', 'Binaries', 'Win64', 'ue4ss', 'Mods', 'shared', 'json.lua'),
     path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnardsUpgrades_P.pak'),
     path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnardsUpgrades_P.ucas'),
     path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'CheaperInnardsUpgrades_P.utoc'),
+  ].sort());
+});
+
+test('Cheaper Innards 0.5 archive deploys root Mods content while skipping bundled loader', () => {
+  const result = buildInstallInstructions([
+    'dwmapi.dll',
+    'dsound.dll',
+    'version.dll',
+    'bitfix/sig.lua',
+    'ue4ss/LICENSE',
+    'ue4ss/UE4SS.dll',
+    'ue4ss/UE4SS-settings.ini',
+    'ue4ss/Mods/BPML_GenericFunctions/Scripts/main.lua',
+    'ue4ss/Mods/BPModLoaderMod/Scripts/main.lua',
+    'ue4ss/Mods/CheatManagerEnablerMod/Scripts/main.lua',
+    'ue4ss/Mods/ConsoleCommandsMod/Scripts/main.lua',
+    'ue4ss/Mods/ConsoleEnablerMod/Scripts/main.lua',
+    'ue4ss/Mods/Keybinds/Scripts/main.lua',
+    'ue4ss/Mods/shared/UEHelpers/UEHelpers.lua',
+    'ue4ss/Mods/mods.txt',
+    'ue4ss/Mods/mods.json',
+    'Mods/BPModLoaderMod/Scripts/main.lua',
+    'Mods/BPModLoaderMod/load_order.txt',
+    'Mods/CheaperInnardsUpgrades/Scripts/main.lua',
+    'Mods/CheaperInnardsUpgrades/UpgradeCosts.json',
+    'Mods/shared/json.lua',
+  ]);
+
+  assert.equal(result.kind, 'ue4ss-mod');
+  assert.equal(result.modType, MOD_TYPES.UE4SS_MODS);
+  assert.deepEqual(result.warnings, ['ue4ss-loader-missing']);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('BPModLoaderMod', 'Scripts', 'main.lua'),
+    path.join('BPModLoaderMod', 'load_order.txt'),
+    path.join('CheaperInnardsUpgrades', 'Scripts', 'main.lua'),
+    path.join('CheaperInnardsUpgrades', 'UpgradeCosts.json'),
+    path.join('shared', 'json.lua'),
   ].sort());
 });
 

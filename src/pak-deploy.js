@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { PAKS_MODS_PATH, PAKS_ROOT_PATH } = require('./constants');
+const { PAKS_MODS_PATH, PAKS_ROOT_PATH, WIN64_PATH } = require('./constants');
 
 const PAK_CONTAINER_EXTENSIONS = new Set(['.pak', '.ucas', '.utoc']);
 
@@ -50,6 +50,33 @@ async function materializeSymlinkFile(nodeFs, filePath) {
   }
 }
 
+async function materializeSymlinkFiles(filePaths, nodeFs = require('fs')) {
+  const result = {
+    checked: 0,
+    materialized: 0,
+    files: [],
+    errors: [],
+  };
+
+  for (const filePath of filePaths) {
+    result.checked += 1;
+
+    try {
+      if (await materializeSymlinkFile(nodeFs, filePath)) {
+        result.materialized += 1;
+        result.files.push(filePath);
+      }
+    } catch (err) {
+      result.errors.push({
+        filePath,
+        message: err.message,
+      });
+    }
+  }
+
+  return result;
+}
+
 async function materializePakSymlinks(gamePath, nodeFs = require('fs')) {
   const result = {
     checked: 0,
@@ -94,7 +121,25 @@ async function materializePakSymlinks(gamePath, nodeFs = require('fs')) {
   return result;
 }
 
+async function materializeUE4SSRuntimeSymlinks(gamePath, nodeFs = require('fs')) {
+  if (gamePath === undefined) {
+    return {
+      checked: 0,
+      materialized: 0,
+      files: [],
+      errors: [],
+    };
+  }
+
+  return materializeSymlinkFiles([
+    path.join(gamePath, WIN64_PATH, 'dwmapi.dll'),
+    path.join(gamePath, WIN64_PATH, 'ue4ss', 'UE4SS.dll'),
+    path.join(gamePath, WIN64_PATH, 'ue4ss', 'UE4SS-settings.ini'),
+  ], nodeFs);
+}
+
 module.exports = {
   isPakContainerFile,
   materializePakSymlinks,
+  materializeUE4SSRuntimeSymlinks,
 };

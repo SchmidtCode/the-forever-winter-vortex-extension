@@ -4,8 +4,12 @@ const os = require('os');
 const path = require('path');
 const test = require('node:test');
 
-const { PAKS_MODS_PATH } = require('../src/constants');
-const { isPakContainerFile, materializePakSymlinks } = require('../src/pak-deploy');
+const { WIN64_PATH, PAKS_MODS_PATH } = require('../src/constants');
+const {
+  isPakContainerFile,
+  materializePakSymlinks,
+  materializeUE4SSRuntimeSymlinks,
+} = require('../src/pak-deploy');
 
 test('isPakContainerFile detects Unreal container files', () => {
   assert.equal(isPakContainerFile('Example_P.pak'), true);
@@ -46,4 +50,51 @@ test('materializePakSymlinks replaces symlinked PAK containers with timestamp-pr
   const deployedStat = await fs.promises.lstat(deployedPak);
   assert.equal(deployedStat.isSymbolicLink(), false);
   assert.equal(Math.trunc(deployedStat.mtimeMs / 1000), Math.trunc(stagedTime.getTime() / 1000));
+});
+
+test('materializeUE4SSRuntimeSymlinks replaces symlinked UE4SS runtime files', async (t) => {
+  const gamePath = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'tfw-ue4ss-deploy-'));
+  t.after(() => fs.promises.rm(gamePath, { recursive: true, force: true }));
+
+  const stagedDir = path.join(gamePath, 'staging');
+  const win64Dir = path.join(gamePath, WIN64_PATH);
+  const ue4ssDir = path.join(win64Dir, 'ue4ss');
+  await fs.promises.mkdir(stagedDir, { recursive: true });
+  await fs.promises.mkdir(ue4ssDir, { recursive: true });
+
+  const stagedDwmapi = path.join(stagedDir, 'dwmapi.dll');
+  const stagedDll = path.join(stagedDir, 'UE4SS.dll');
+  const stagedSettings = path.join(stagedDir, 'UE4SS-settings.ini');
+  const deployedDwmapi = path.join(win64Dir, 'dwmapi.dll');
+  const deployedDll = path.join(ue4ssDir, 'UE4SS.dll');
+  const deployedSettings = path.join(ue4ssDir, 'UE4SS-settings.ini');
+
+  await fs.promises.writeFile(stagedDwmapi, 'proxy');
+  await fs.promises.writeFile(stagedDll, 'runtime');
+  await fs.promises.writeFile(stagedSettings, 'settings');
+
+  try {
+    await fs.promises.symlink(stagedDwmapi, deployedDwmapi);
+    await fs.promises.symlink(stagedDll, deployedDll);
+    await fs.promises.symlink(stagedSettings, deployedSettings);
+  } catch (err) {
+    t.skip(`symlink creation is not available in this environment: ${err.message}`);
+    return;
+  }
+
+  const result = await materializeUE4SSRuntimeSymlinks(gamePath, fs);
+
+  assert.equal(result.errors.length, 0);
+  assert.equal(result.materialized, 3);
+  assert.deepEqual(result.files.sort(), [
+    deployedDll,
+    deployedDwmapi,
+    deployedSettings,
+  ].sort());
+  assert.equal(await fs.promises.readFile(deployedDwmapi, 'utf8'), 'proxy');
+  assert.equal(await fs.promises.readFile(deployedDll, 'utf8'), 'runtime');
+  assert.equal(await fs.promises.readFile(deployedSettings, 'utf8'), 'settings');
+  assert.equal((await fs.promises.lstat(deployedDwmapi)).isSymbolicLink(), false);
+  assert.equal((await fs.promises.lstat(deployedDll)).isSymbolicLink(), false);
+  assert.equal((await fs.promises.lstat(deployedSettings)).isSymbolicLink(), false);
 });

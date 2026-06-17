@@ -276,9 +276,27 @@ function isDeployableUE4SSModDestination(destination) {
     && !isUE4SSRuntimeModDestination(destination);
 }
 
+function isRootModsArchivePath(filePath) {
+  const segments = pathSegments(filePath).map((segment) => segment.toLowerCase());
+  const modsIdx = indexOfSegment(segments, 'mods');
+  return modsIdx !== -1 && segments[modsIdx - 1] !== 'ue4ss';
+}
+
+function isDeployableUE4SSModFile(file, destination) {
+  if (destination === undefined || destination.length === 0 || isGlobalUE4SSManifest(destination)) {
+    return false;
+  }
+
+  if (isRootModsArchivePath(file)) {
+    return true;
+  }
+
+  return !isUE4SSRuntimeModDestination(destination);
+}
+
 function deployableUE4SSModDestinations(files) {
   return ue4ssModOnlyDestinations(files)
-    .filter(({ destination }) => isDeployableUE4SSModDestination(destination));
+    .filter(({ file, destination }) => isDeployableUE4SSModFile(file, destination));
 }
 
 function hasDeployableUE4SSMod(files) {
