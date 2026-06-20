@@ -28,7 +28,15 @@ async function readTextIfExists(fsModule, filePath) {
   }
 }
 
-async function listUE4SSModFolders(fsModule, modsDir) {
+function normalizeModName(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\.[^.]+$/, '')
+    .replace(/[^a-z0-9]+/g, '');
+}
+
+async function listUE4SSModFolders(fsModule, modsDir, options = {}) {
   const stat = await statExists(fsModule, modsDir);
   if (stat === undefined || !stat.isDirectory()) {
     return [];
@@ -36,9 +44,19 @@ async function listUE4SSModFolders(fsModule, modsDir) {
 
   const entries = await fsModule.readdirAsync(modsDir);
   const folders = [];
+  const disabledFolderNames = new Set((options.disabledFolderNames || []).map(normalizeModName));
+  const allowedFolderNames = options.allowedFolderNames === undefined
+    ? undefined
+    : new Set((options.allowedFolderNames || []).map(normalizeModName));
 
   for (const entry of entries) {
     if (isManifestFileName(entry)) {
+      continue;
+    }
+    if (disabledFolderNames.has(normalizeModName(entry))) {
+      continue;
+    }
+    if (allowedFolderNames !== undefined && !allowedFolderNames.has(normalizeModName(entry))) {
       continue;
     }
 
@@ -71,13 +89,13 @@ async function ensureDirectory(fsModule, dirPath) {
   }
 }
 
-async function regenerateUE4SSManifests(fsModule, gamePath) {
+async function regenerateUE4SSManifests(fsModule, gamePath, options = {}) {
   if (gamePath === undefined) {
     return { skipped: true, reason: 'missing-game-path' };
   }
 
   const modsDir = path.join(gamePath, UE4SS_MODS_PATH);
-  const folders = await listUE4SSModFolders(fsModule, modsDir);
+  const folders = await listUE4SSModFolders(fsModule, modsDir, options);
   const existingEntries = await readExistingManifestEntries(fsModule, modsDir);
 
   if (folders.length === 0 && existingEntries.length === 0) {

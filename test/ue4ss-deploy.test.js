@@ -164,6 +164,83 @@ test('regenerateUE4SSManifests writes merged mods txt and json from deployed fol
   ]);
 });
 
+test('regenerateUE4SSManifests omits folders disabled by active profile state', async () => {
+  const gamePath = path.join('C:', 'Game');
+  const modsDir = path.join(gamePath, UE4SS_MODS_PATH);
+  const fsModule = mockFs({
+    directories: [
+      modsDir,
+      path.join(modsDir, 'NoRecoil'),
+      path.join(modsDir, 'TFWWorkbench'),
+    ],
+    files: {
+      [path.join(modsDir, 'mods.txt')]: 'NoRecoil : 1\r\nTFWWorkbench : 1\r\nKeybinds : 1\r\n',
+      [path.join(modsDir, 'mods.json')]: JSON.stringify([
+        { mod_name: 'NoRecoil', mod_enabled: true },
+        { mod_name: 'TFWWorkbench', mod_enabled: true },
+        { mod_name: 'Keybinds', mod_enabled: true },
+      ]),
+    },
+  });
+
+  await regenerateUE4SSManifests(fsModule, gamePath, {
+    disabledFolderNames: ['NoRecoil'],
+  });
+
+  const modsTxt = await fsModule.readFileAsync(path.join(modsDir, 'mods.txt'));
+  const modsJson = await fsModule.readFileAsync(path.join(modsDir, 'mods.json'));
+
+  assert.equal(modsTxt.includes('NoRecoil'), false);
+  assert.equal(modsTxt.includes('TFWWorkbench : 1'), true);
+  assert.equal(JSON.parse(modsJson).some((entry) => entry.mod_name === 'NoRecoil'), false);
+  assert.equal(JSON.parse(modsJson).some((entry) =>
+    entry.mod_name === 'TFWWorkbench' && entry.mod_enabled === true), true);
+});
+
+test('regenerateUE4SSManifests omits all custom folders when active profile has no enabled UE4SS mods', async () => {
+  const gamePath = path.join('C:', 'Game');
+  const modsDir = path.join(gamePath, UE4SS_MODS_PATH);
+  const fsModule = mockFs({
+    directories: [
+      modsDir,
+      path.join(modsDir, 'FWMM_Discovery'),
+      path.join(modsDir, 'NoRecoil'),
+      path.join(modsDir, 'TFWWorkbench'),
+    ],
+    files: {
+      [path.join(modsDir, 'mods.txt')]: [
+        'FWMM_Discovery : 1',
+        'NoRecoil : 1',
+        'TFWWorkbench : 1',
+        'Keybinds : 1',
+        '',
+      ].join('\r\n'),
+      [path.join(modsDir, 'mods.json')]: JSON.stringify([
+        { mod_name: 'FWMM_Discovery', mod_enabled: true },
+        { mod_name: 'NoRecoil', mod_enabled: true },
+        { mod_name: 'TFWWorkbench', mod_enabled: true },
+        { mod_name: 'Keybinds', mod_enabled: true },
+      ]),
+    },
+  });
+
+  await regenerateUE4SSManifests(fsModule, gamePath, {
+    allowedFolderNames: [],
+    disabledFolderNames: ['FWMM_Discovery', 'NoRecoil', 'TFWWorkbench'],
+  });
+
+  const modsTxt = await fsModule.readFileAsync(path.join(modsDir, 'mods.txt'));
+  const modsJson = await fsModule.readFileAsync(path.join(modsDir, 'mods.json'));
+  const parsedJson = JSON.parse(modsJson);
+
+  assert.equal(modsTxt.includes('FWMM_Discovery'), false);
+  assert.equal(modsTxt.includes('NoRecoil'), false);
+  assert.equal(modsTxt.includes('TFWWorkbench'), false);
+  assert.equal(parsedJson.some((entry) => entry.mod_name === 'FWMM_Discovery'), false);
+  assert.equal(parsedJson.some((entry) => entry.mod_name === 'NoRecoil'), false);
+  assert.equal(parsedJson.some((entry) => entry.mod_name === 'TFWWorkbench'), false);
+});
+
 test('regenerateUE4SSManifests skips missing UE4SS Mods folder', async () => {
   const fsModule = mockFs();
   assert.deepEqual(await regenerateUE4SSManifests(fsModule, path.join('C:', 'Game')), {

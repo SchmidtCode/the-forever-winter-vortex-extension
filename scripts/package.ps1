@@ -3,7 +3,8 @@ $ErrorActionPreference = "Stop"
 $root = Resolve-Path (Join-Path $PSScriptRoot "..")
 $dist = Join-Path $root "dist"
 $staging = Join-Path $dist "the-forever-winter"
-$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-0.0.5.zip"
+$package = Get-Content -Raw -LiteralPath (Join-Path $root "package.json") | ConvertFrom-Json
+$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-$($package.version).zip"
 
 if (Test-Path $staging) {
   Remove-Item -LiteralPath $staging -Recurse -Force

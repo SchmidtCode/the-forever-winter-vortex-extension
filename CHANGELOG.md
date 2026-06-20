@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.7-beta
+
+- When Vortex provides active profile mod state, generate UE4SS `mods.txt` and `mods.json` from enabled Vortex mods instead of trusting leftover folders in `Win64\ue4ss\Mods`.
+- Fix collection/profile disable cases where stale UE4SS folders kept custom mods like `NoRecoil`, `TFWWorkbench`, or `FWMM_Discovery` enabled in generated manifests.
+
+## 0.0.6-beta
+
+- Honor disabled Vortex profile/collection mods when regenerating UE4SS `mods.txt` and `mods.json`, so stale deployed folders do not keep disabled UE4SS mods enabled.
+
 ## 0.0.5-beta
 
 - Restore post-deploy materialization of symlinked `.pak`, `.ucas`, and `.utoc` files because The Forever Winter can crash when those files remain symlinks.

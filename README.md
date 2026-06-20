@@ -84,7 +84,7 @@ mods.txt
 mods.json
 ```
 
-Existing UE4SS built-in entries are preserved when present, stale custom entries are removed when their folder is no longer deployed, and current UE4SS mod folders are written as enabled. Global `mods.txt` and `mods.json` files from UE4SS content archives are skipped during install so individual mods do not fight over the shared manifest files.
+Existing UE4SS built-in entries are preserved when present, stale custom entries are removed when their folder is no longer deployed, and current UE4SS mod folders are written as enabled. When Vortex provides active profile state during deploy, the generated manifests are limited to folders matching enabled Vortex mods; this helps profile and collection switches stop loading mods that Vortex has disabled even if stale folders remain in `Win64\ue4ss\Mods`. Global `mods.txt` and `mods.json` files from UE4SS content archives are skipped during install so individual mods do not fight over the shared manifest files.
 
 When a mod offers both a UE4SS version and an older pure asset/PAK version, prefer the UE4SS version if the mod author says that is the maintained path. The extension does not convert pure asset mods into UE4SS mods; it only routes the files in the archive you install.
 
@@ -175,7 +175,7 @@ Build a release zip containing only runtime extension files:
 npm run package
 ```
 
-The package is written to `dist/the-forever-winter-vortex-extension-0.0.3.zip`.
+The package is written to `dist/the-forever-winter-vortex-extension-0.0.7.zip`.
 
 ## Manual Smoke Test
 
