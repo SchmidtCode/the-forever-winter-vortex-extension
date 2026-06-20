@@ -73,7 +73,9 @@ UE4SS mod-only archives under `ue4ss\Mods\<mod>` are installed to:
 Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods
 ```
 
-If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`.
+If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`. PAK triplets inside a generic `Mods` folder are treated as PAK mods, not UE4SS Lua mods.
+
+When changing extension versions, remove and reinstall any mod that was previously routed incorrectly. Vortex can keep the already-installed staging folder for a mod even after a purge/redeploy, so collection enable/disable alone may preserve missing UE4SS loader files or old PAK destinations. After deployment, the extension warns if UE4SS is enabled but `dwmapi.dll`, `ue4ss\UE4SS.dll`, or `ue4ss\UE4SS-settings.ini` are missing, or if PAK triplets are still sitting under `Win64\ue4ss\Mods`.
 
 Some The Forever Winter mod archives bundle their own copy of UE4SS, Signature Bypass, or shared UE4SS helper files alongside the actual mod. Those bundled dependency files are intentionally skipped when the archive also contains a real UE4SS mod folder. Install UE4SS and Signature Bypass as their own Vortex mods, then install content mods like NoRecoil or Cheaper Innards Upgrades on top. This avoids Vortex conflicts over shared files such as `dwmapi.dll`, `UE4SS.dll`, `UE4SS-settings.ini`, `mods.txt`, `mods.json`, `Keybinds`, `shared`, `dsound.dll`, and `bitfix`.
 
@@ -84,7 +86,7 @@ mods.txt
 mods.json
 ```
 
-Existing UE4SS built-in entries are preserved when present, stale custom entries are removed when their folder is no longer deployed, and current UE4SS mod folders are written as enabled. Global `mods.txt` and `mods.json` files from UE4SS content archives are skipped during install so individual mods do not fight over the shared manifest files.
+Existing UE4SS built-in entries are preserved when present, stale custom entries are removed when their folder is no longer deployed, and current UE4SS mod folders are written as enabled. When Vortex provides active profile state during deploy, the generated manifests are limited to folders matching enabled Vortex mods; this helps profile and collection switches stop loading mods that Vortex has disabled even if stale folders remain in `Win64\ue4ss\Mods`. If Vortex deployed the shared manifests as symlinks from a UE4SS loader archive, the extension replaces those symlinks with physical generated files before writing. Global `mods.txt` and `mods.json` files from UE4SS content archives are skipped during install so individual mods do not fight over the shared manifest files.
 
 When a mod offers both a UE4SS version and an older pure asset/PAK version, prefer the UE4SS version if the mod author says that is the maintained path. The extension does not convert pure asset mods into UE4SS mods; it only routes the files in the archive you install.
 
@@ -175,7 +177,7 @@ Build a release zip containing only runtime extension files:
 npm run package
 ```
 
-The package is written to `dist/the-forever-winter-vortex-extension-0.0.3.zip`.
+The package is written to `dist/the-forever-winter-vortex-extension-0.0.6.zip`.
 
 ## Manual Smoke Test
 

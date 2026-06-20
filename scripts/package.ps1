@@ -3,7 +3,8 @@ $ErrorActionPreference = "Stop"
 $root = Resolve-Path (Join-Path $PSScriptRoot "..")
 $dist = Join-Path $root "dist"
 $staging = Join-Path $dist "the-forever-winter"
-$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-0.0.5.zip"
+$package = Get-Content -Raw -LiteralPath (Join-Path $root "package.json") | ConvertFrom-Json
+$zipPath = Join-Path $dist "the-forever-winter-vortex-extension-$($package.version).zip"
 
 if (Test-Path $staging) {
   Remove-Item -LiteralPath $staging -Recurse -Force
@@ -21,11 +22,13 @@ Copy-Item -LiteralPath (Join-Path $root "README.md") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "CHANGELOG.md") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "LICENSE") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "src\constants.js") -Destination (Join-Path $staging "src")
+Copy-Item -LiteralPath (Join-Path $root "src\deploy-health.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\installers.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\pak-deploy.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\setup.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-deploy.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-manifest.js") -Destination (Join-Path $staging "src")
+Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-profile.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "scripts\lint-ue4ss-manifest.js") -Destination (Join-Path $staging "scripts")
 
 if (Test-Path $zipPath) {

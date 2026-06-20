@@ -185,6 +185,10 @@ function hasUE4SSSegment(files) {
 
 function hasUE4SSModMarkers(files) {
   return fileEntries(files).some((file) => {
+    if (PAK_EXTENSIONS.has(extension(file))) {
+      return false;
+    }
+
     const normalized = normalizeArchivePath(file).toLowerCase();
     return normalized.endsWith('/enabled.txt')
       || normalized.endsWith('/scripts/main.lua')
@@ -287,6 +291,10 @@ function isDeployableUE4SSModFile(file, destination) {
     return false;
   }
 
+  if (PAK_EXTENSIONS.has(extension(file))) {
+    return false;
+  }
+
   if (isRootModsArchivePath(file)) {
     return true;
   }
@@ -342,13 +350,28 @@ function isBundledDependencyGameRootDestination(destination) {
   return false;
 }
 
+function isMisplacedWin64PakDestination(destination) {
+  const normalized = normalizeArchivePath(destination).toLowerCase();
+  const win64 = normalizeArchivePath(WIN64_PATH).toLowerCase();
+  return PAK_EXTENSIONS.has(extension(destination))
+    && (
+      normalized.startsWith(`${win64}/ue4ss/mods/`)
+      || normalized.startsWith(`${win64}/mods/`)
+    );
+}
+
 function installGameRoot(files) {
   const instructions = [setModTypeInstruction(MOD_TYPES.GAME_ROOT)];
   const skipBundledDependencies = hasDeployableUE4SSMod(files) || (hasUE4SS(files) && hasPakFile(files));
+  const pakPath = pakTargetPath(pakModType(files));
 
   for (const file of fileEntries(files)) {
     const destination = extractFromGameRoot(file);
     if (destination !== undefined) {
+      if (isMisplacedWin64PakDestination(destination)) {
+        instructions.push(copyInstruction(file, path.join(pakPath, basename(file))));
+        continue;
+      }
       if (skipBundledDependencies && isBundledDependencyGameRootDestination(destination)) {
         continue;
       }

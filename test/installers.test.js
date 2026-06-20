@@ -279,6 +279,23 @@ test('root Mods folder without loader routes under ue4ss Mods and warns', () => 
   ].sort());
 });
 
+test('root Mods folder containing only PAK triplet routes to Paks Mods', () => {
+  const result = buildInstallInstructions([
+    'Mods/132-HeadshotMultiplierEquality_P.pak',
+    'Mods/132-HeadshotMultiplierEquality_P.ucas',
+    'Mods/132-HeadshotMultiplierEquality_P.utoc',
+    'README.txt',
+  ]);
+
+  assert.equal(result.kind, 'pak');
+  assert.equal(result.modType, MOD_TYPES.PAKS_MODS);
+  assert.deepEqual(copyDestinations(result), [
+    '132-HeadshotMultiplierEquality_P.pak',
+    '132-HeadshotMultiplierEquality_P.ucas',
+    '132-HeadshotMultiplierEquality_P.utoc',
+  ].sort());
+});
+
 test('TFWWorkbench release archive installs mod folder, skips examples, and creates data folder', () => {
   const files = [
     'Examples/Item/001_TestItem.json',
@@ -366,6 +383,22 @@ test('game-root content archive skips bundled UE4SS and Signature Bypass depende
     path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'NoRecoil_P.pak'),
     path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'NoRecoil_P.ucas'),
     path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', 'NoRecoil_P.utoc'),
+  ].sort());
+});
+
+test('game-root archive with PAK triplet under Win64 ue4ss Mods reroutes to Paks Mods', () => {
+  const result = buildInstallInstructions([
+    'Archive/Windows/ForeverWinter/Binaries/Win64/ue4ss/Mods/132-HeadshotMultiplierEquality_P.pak',
+    'Archive/Windows/ForeverWinter/Binaries/Win64/ue4ss/Mods/132-HeadshotMultiplierEquality_P.ucas',
+    'Archive/Windows/ForeverWinter/Binaries/Win64/ue4ss/Mods/132-HeadshotMultiplierEquality_P.utoc',
+  ]);
+
+  assert.equal(result.kind, 'game-root');
+  assert.equal(result.modType, MOD_TYPES.GAME_ROOT);
+  assert.deepEqual(copyDestinations(result), [
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', '132-HeadshotMultiplierEquality_P.pak'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', '132-HeadshotMultiplierEquality_P.ucas'),
+    path.join('Windows', 'ForeverWinter', 'Content', 'Paks', 'Mods', '132-HeadshotMultiplierEquality_P.utoc'),
   ].sort());
 });
 

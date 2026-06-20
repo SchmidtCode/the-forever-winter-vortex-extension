@@ -19,9 +19,14 @@ const {
   testSupportedContent,
   testSupportedSignatureBypass,
 } = require('./src/installers');
+const {
+  findMisroutedUE4SSPakFiles,
+  ue4ssLoaderStatus,
+} = require('./src/deploy-health');
 const { materializePakSymlinks, materializeUE4SSRuntimeSymlinks } = require('./src/pak-deploy');
 const { prepareForModding } = require('./src/setup');
 const { regenerateUE4SSManifests } = require('./src/ue4ss-deploy');
+const { ue4ssManifestFilterForProfile } = require('./src/ue4ss-profile');
 
 function loadVortexApi() {
   try {
@@ -176,6 +181,32 @@ function notifyUE4SSRuntimeMaterializationFailed(api, result) {
   });
 }
 
+function notifyUE4SSLoaderIncomplete(api, status) {
+  api.sendNotification({
+    id: 'tfw-ue4ss-loader-incomplete',
+    type: 'warning',
+    title: 'UE4SS loader files are missing',
+    message: `UE4SS is enabled in Vortex, but the deployed game folder is missing: ${status.missing.join(', ')}. Remove and reinstall the UE4SS archive with this extension version, then purge and redeploy.`,
+    actions: [
+      {
+        title: 'Open UE4SS releases',
+        action: () => util.opn(UE4SS_RELEASES_URL).catch(() => undefined),
+      },
+    ],
+  });
+}
+
+function notifyMisroutedPakFiles(api, files) {
+  const names = files.slice(0, 3).map((filePath) => path.basename(filePath)).join(', ');
+  const suffix = files.length > 3 ? ` and ${files.length - 3} more` : '';
+  api.sendNotification({
+    id: 'tfw-pak-files-under-ue4ss-mods',
+    type: 'warning',
+    title: 'PAK mods deployed to the wrong folder',
+    message: `Found PAK container files under Win64\\ue4ss\\Mods: ${names}${suffix}. Remove and reinstall those PAK mods with this extension version, then purge and redeploy.`,
+  });
+}
+
 async function warnForUE4SSLegacyLayout(context, gamePath) {
   if (gamePath === undefined) {
     return;
@@ -197,10 +228,16 @@ async function postDeployForContext(context, profileId) {
   }
 
   const gamePath = getDiscoveredGamePath(context);
+  const manifestFilter = ue4ssManifestFilterForProfile(context, profileId);
 
   const pakResult = await materializePakSymlinks(gamePath, nodeFs);
   if (pakResult.errors.length > 0) {
     notifyPakMaterializationFailed(context.api, pakResult);
+  }
+
+  const misroutedPakFiles = await findMisroutedUE4SSPakFiles(gamePath, nodeFs);
+  if (misroutedPakFiles.length > 0) {
+    notifyMisroutedPakFiles(context.api, misroutedPakFiles);
   }
 
   const ue4ssRuntimeResult = await materializeUE4SSRuntimeSymlinks(gamePath, nodeFs);
@@ -210,8 +247,16 @@ async function postDeployForContext(context, profileId) {
     notifyUE4SSRuntimeMaterialized(context.api, ue4ssRuntimeResult);
   }
 
+  const loaderStatus = await ue4ssLoaderStatus(gamePath, nodeFs);
+  if (hasInstalledUE4SSMod(context) && loaderStatus.missing.length > 0) {
+    notifyUE4SSLoaderIncomplete(context.api, loaderStatus);
+  }
+
   try {
-    await regenerateUE4SSManifests(fs, gamePath);
+    await regenerateUE4SSManifests(fs, gamePath, {
+      ...manifestFilter,
+      nodeFs,
+    });
   } catch (err) {
     notifyUE4SSManifestFailed(context.api, err);
   }
@@ -341,5 +386,6 @@ function main(context) {
 
 module.exports = {
   default: main,
+  ue4ssManifestFilterForProfile,
   isSignatureBypassArchive,
 };

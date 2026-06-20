@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FGenericCrashContext>
+	<RuntimeProperties>
+		<CrashVersion>3</CrashVersion>
+		<ExecutionGuid>112B2D22441FE9512BC0B282C7AB809C</ExecutionGuid>
+		<CrashGUID>UECC-Windows-4532D2A14B41E42A4454D68BEF278B94_0000</CrashGUID>
+		<IsEnsure>false</IsEnsure>
+		<IsStall>false</IsStall>
+		<IsAssert>true</IsAssert>
+		<CrashType>Assert</CrashType>
+		<ErrorMessage>LowLevelFatalError [File:G:\FW-staging\Engine\Source\Runtime\RenderCore\Private\RenderingThread.cpp] [Line: 1415] GameThread timed out waiting for RenderThread after 120.00 secs</ErrorMessage>
+		<CrashReporterMessage />
+		<CrashReporterMessage>Attended</CrashReporterMessage>
+		<ProcessId>22924</ProcessId>
+		<SecondsSinceStart>124</SecondsSinceStart>
+		<IsInternalBuild>false</IsInternalBuild>
+		<IsPerforceBuild>false</IsPerforceBuild>
+		<IsWithDebugInfo>true</IsWithDebugInfo>
+		<IsSourceDistribution>false</IsSourceDistribution>
+		<GameName>UE-ForeverWinter</GameName>
+		<ExecutableName>ForeverWinter-Win64-Shipping</ExecutableName>
+		<BuildConfiguration>Shipping</BuildConfiguration>
+		<GameSessionID />
+		<PlatformName>Windows</PlatformName>
+		<PlatformFullName>Win64 [Windows 11 (25H2) [10.0.26200.8655]  64b]</PlatformFullName>
+		<PlatformNameIni>Windows</PlatformNameIni>
+		<EngineMode>Game</EngineMode>
+		<EngineModeEx>Unset</EngineModeEx>
+		<DeploymentName />
+		<EngineVersion>5.4.2-0+UE5</EngineVersion>
+		<EngineCompatibleVersion>5.4.2-0+UE5</EngineCompatibleVersion>
+		<CommandLine />
+		<LanguageLCID>0</LanguageLCID>
+		<AppDefaultLocale>en-US</AppDefaultLocale>
+		<BuildVersion>UE5-CL-0</BuildVersion>
+		<Symbols>UE5-CL-0-Win64-Shipping</Symbols>
+		<IsUERelease>true</IsUERelease>
+		<IsRequestingExit>false</IsRequestingExit>
+		<UserName />
+		<BaseDir>c:/program files (x86)/steam/steamapps/common/The Forever Winter/Windows/ForeverWinter/Binaries/Win64/</BaseDir>
+		<RootDir>c:/program files (x86)/steam/steamapps/common/The Forever Winter/Windows/</RootDir>
+		<MachineId>02E64F1D43BCFBBCA2A5649C7853BF48</MachineId>
+		<LoginId>02e64f1d43bcfbbca2a5649c7853bf48</LoginId>
+		<EpicAccountId>472efef5eca1447cb42fdfec4f3c8cee</EpicAccountId>
+		<SourceContext />
+		<UserDescription />
+		<UserActivityHint />
+		<CrashDumpMode>0</CrashDumpMode>
+		<GameStateName />
+		<Misc.NumberOfCores>6</Misc.NumberOfCores>
+		<Misc.NumberOfCoresIncludingHyperthreads>6</Misc.NumberOfCoresIncludingHyperthreads>
+		<Misc.Is64bitOperatingSystem>1</Misc.Is64bitOperatingSystem>
+		<Misc.CPUVendor>GenuineIntel</Misc.CPUVendor>
+		<Misc.CPUBrand>Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz</Misc.CPUBrand>
+		<Misc.PrimaryGPUBrand>NVIDIA GeForce RTX 3070 Ti</Misc.PrimaryGPUBrand>
+		<Misc.OSVersionMajor>Windows 11 (25H2) [10.0.26200.8655]</Misc.OSVersionMajor>
+		<Misc.OSVersionMinor />
+		<Misc.AnticheatProvider />
+		<MemoryStats.TotalPhysical>34278576128</MemoryStats.TotalPhysical>
+		<MemoryStats.TotalVirtual>72027312128</MemoryStats.TotalVirtual>
+		<MemoryStats.PageSize>4096</MemoryStats.PageSize>
+		<MemoryStats.TotalPhysicalGB>32</MemoryStats.TotalPhysicalGB>
+		<MemoryStats.AvailablePhysical>15524687872</MemoryStats.AvailablePhysical>
+		<MemoryStats.AvailableVirtual>42402877440</MemoryStats.AvailableVirtual>
+		<MemoryStats.UsedPhysical>3618816000</MemoryStats.UsedPhysical>
+		<MemoryStats.PeakUsedPhysical>3761733632</MemoryStats.PeakUsedPhysical>
+		<MemoryStats.UsedVirtual>7902687232</MemoryStats.UsedVirtual>
+		<MemoryStats.PeakUsedVirtual>7911673856</MemoryStats.PeakUsedVirtual>
+		<MemoryStats.bIsOOM>0</MemoryStats.bIsOOM>
+		<MemoryStats.OOMAllocationSize>0</MemoryStats.OOMAllocationSize>
+		<MemoryStats.OOMAllocationAlignment>0</MemoryStats.OOMAllocationAlignment>
+		<NumMinidumpFramesToIgnore>4</NumMinidumpFramesToIgnore>
+		<CallStack>ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+ForeverWinter_Win64_Shipping
+kernel32
+ntdll</CallStack>
+		<PCallStack>ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b16d0a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b2c0e0 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e4d4be ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e5414c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e541ca ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e54ff0 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e5d2b4 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 73ae4a2 KERNEL32 0x00007ffd7e9f0000 + 2e957</PCallStack>
+		<PCallStackHash>8209BC909D15A56216951634EFFC4D58BA8ECA27</PCallStackHash>
+		<Threads>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 113a6ff ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 73dc81e VCRUNTIME140 0x00007ffd5f4b0000 + 1a9c0 ntdll 0x00007ffd80000000 + 1647af ntdll 0x00007ffd80000000 + 221c7 ntdll 0x00007ffd80000000 + 96ea1 KERNELBASE 0x00007ffd7d290000 + c1b6a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 113ca18 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 10e2b90 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 108d236 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b16d0a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b2c0e0 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e4d4be ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e5414c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e541ca ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e54ff0 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e5d2b4 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 73ae4a2 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>true</IsCrashed>
+				<Registers />
+				<ThreadID>20528</ThreadID>
+				<ThreadName>GameThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa2c8a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8b610 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e254 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>6916</ThreadID>
+				<ThreadName>Foreground Worker #0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa2c8a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8b610 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e254 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>24560</ThreadID>
+				<ThreadName>Foreground Worker #1</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa2c8a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8b610 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e254 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>5364</ThreadID>
+				<ThreadName>Background Worker #2</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa2c8a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8b610 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e254 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>17168</ThreadID>
+				<ThreadName>Background Worker #3</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa2c8a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8b610 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e254 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>9864</ThreadID>
+				<ThreadName>Background Worker #4</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>3316</ThreadID>
+				<ThreadName>BackgroundThreadPool #0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>17264</ThreadID>
+				<ThreadName>BackgroundThreadPool #1</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e1c1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>12628</ThreadID>
+				<ThreadName>FHeartBeatThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1145a3c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3160ad4 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>24180</ThreadID>
+				<ThreadName>FMediaTicker</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1743f53 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>23768</ThreadID>
+				<ThreadName>HttpManagerThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3e93766 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>18076</ThreadID>
+				<ThreadName>OnlineAsyncTaskThreadSteam DefaultInstance</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 163cc4 ntdll 0x00007ffd80000000 + c873 KERNELBASE 0x00007ffd7d290000 + de898 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 10989ac ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa198f ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa17cc ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 10eb496 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e254 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>10716</ThreadID>
+				<ThreadName>OutputDeviceRedirector</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>12044</ThreadID>
+				<ThreadName>IOThreadPool #0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>12948</ThreadID>
+				<ThreadName>IOThreadPool #1</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>18184</ThreadID>
+				<ThreadName>IOThreadPool #2</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>22820</ThreadID>
+				<ThreadName>IOThreadPool #3</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 200bcf2 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>11224</ThreadID>
+				<ThreadName>IoService</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 107b132 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>11692</ThreadID>
+				<ThreadName>IoDispatcher</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2971a85 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>20096</ThreadID>
+				<ThreadName>RHIInterruptThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2971a85 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>13400</ThreadID>
+				<ThreadName>RHISubmissionThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef amd_fidelityfx_dx12 0x00007ffc7a9f0000 + 1d732 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 298741f ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 298726c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 29880e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2a8795a ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2a8373f ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8f693 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f9b8ce ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b23e6b ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>24344</ThreadID>
+				<ThreadName>RHIThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fedf9f ForeverWinter-Win64-Shipping 0x00007ff619db0000 + fa1f97 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 26ece86 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2ae8c97 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2aeb5c1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 26de358 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 26bfaab ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b04534 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b143f2 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f9b8ce ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b23861 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b23ec7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>11016</ThreadID>
+				<ThreadName>RenderThread 0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1145a3c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 2b23f97 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>15156</ThreadID>
+				<ThreadName>RTHeartBeat 0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>12224</ThreadID>
+				<ThreadName>PSOPrecompilePool #0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>8156</ThreadID>
+				<ThreadName>PSOPrecompilePool #1</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>23440</ThreadID>
+				<ThreadName>PSOPrecompilePool #2</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>8168</ThreadID>
+				<ThreadName>PSOPrecompilePool #3</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>23196</ThreadID>
+				<ThreadName>PSOPrecompilePool #4</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>20804</ThreadID>
+				<ThreadName>UnknownThreadPool #0</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>11256</ThreadID>
+				<ThreadName>UnknownThreadPool #1</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>16052</ThreadID>
+				<ThreadName>UnknownThreadPool #2</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>23088</ThreadID>
+				<ThreadName>UnknownThreadPool #3</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>20128</ThreadID>
+				<ThreadName>UnknownThreadPool #4</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 100e05e ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>14076</ThreadID>
+				<ThreadName>UnknownThreadPool #5</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 52fa479 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 52dedbd ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 530f4b3 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>23568</ThreadID>
+				<ThreadName>Electra::ExecAsync</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 52fa479 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 5390b5c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8f617 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 530f4b3 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>10980</ThreadID>
+				<ThreadName>ElectraPlayer::EventDispatch</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1145a3c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 3d327c1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>8200</ThreadID>
+				<ThreadName>ScreenSaverInhibitor</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1f20e87 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>23008</ThreadID>
+				<ThreadName>AudioMixerNullCallbackThread</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1f210a7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1f20fde ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>14024</ThreadID>
+				<ThreadName>AudioMixerRenderThread(1)</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 12731f2 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>20368</ThreadID>
+				<ThreadName>FAsyncPurge</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 5390dc0 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + f8f617 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 530f4b3 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>10088</ThreadID>
+				<ThreadName>ElectraPlayer::SharedWorker</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1600f4 KERNELBASE 0x00007ffd7d290000 + 1c2ef ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1146e36 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 52a013f ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>11156</ThreadID>
+				<ThreadName>ElectraHTTPStream</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1145a3c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 5432b32 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 543d06c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11e59de ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 530f4b3 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>14536</ThreadID>
+				<ThreadName>ElectraPlayer::MP4 streamer</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1145a3c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 531a611 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11e59de ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 530f4b3 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>7948</ThreadID>
+				<ThreadName>ElectraPlayer::Video decoder</ThreadName>
+			</Thread>
+			<Thread>
+				<CallStack>ntdll 0x00007ffd80000000 + 1606f4 ntdll 0x00007ffd80000000 + d2004 KERNELBASE 0x00007ffd7d290000 + 42aa1 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1145a3c ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 52eba55 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 53196d4 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11e59de ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 530f4b3 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 11455e7 ForeverWinter-Win64-Shipping 0x00007ff619db0000 + 1142c71 KERNEL32 0x00007ffd7e9f0000 + 2e957</CallStack>
+				<IsCrashed>false</IsCrashed>
+				<Registers />
+				<ThreadID>19776</ThreadID>
+				<ThreadName>ElectraPlayer::Audio decoder</ThreadName>
+			</Thread>
+		</Threads>
+		<TimeOfCrash>639175249132560000</TimeOfCrash>
+		<bAllowToBeContacted>1</bAllowToBeContacted>
+		<CPUBrand>Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz</CPUBrand>
+		<CrashReportClientVersion>1.0</CrashReportClientVersion>
+		<Modules>c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Plugins\Streamline\Binaries\ThirdParty\Win64\nvngx_dlssg.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\ForeverWinter-Win64-Shipping.exe
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Plugins\DLSS\Binaries\ThirdParty\Win64\nvngx_dlss.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Plugins\Streamline\Binaries\ThirdParty\Win64\nvngx_deepdvc.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\amd_fidelityfx_dx12.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\RedpointEOS\EOSSDK-Win64-Shipping.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\ue4ss\UE4SS.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\Vorbis\Win64\VS2015\libvorbis_64.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\NVIDIA\NVaftermath\Win64\GFSDK_Aftermath_Lib.x64.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\Windows\XAudio2_9\x64\xaudio2_9redist.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\OpenColorIO_2_3.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\RedpointEOS\x64\xaudio2_9redist.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\DbgHelp\dbghelp.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\dsound.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Plugins\Streamline\Binaries\ThirdParty\Win64\sl.interposer.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\Ogg\Win64\VS2015\libogg_64.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\Vorbis\Win64\VS2015\libvorbisfile_64.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\Engine\Binaries\ThirdParty\Steamworks\Steamv157\Win64\steam_api64.dll
+c:\program files (x86)\Steam\steamapps\common\The Forever Winter\Windows\ForeverWinter\Binaries\Win64\dwmapi.dll</Modules>
+	</RuntimeProperties>
+	<PlatformProperties>
+		<PlatformIsRunningWindows>1</PlatformIsRunningWindows>
+		<IsRunningOnBattery>false</IsRunningOnBattery>
+		<DriveStats.PersistentDownload.Name>C:/Users/ramie/AppData/Local/ForeverWinter/Saved/PersistentDownloadDir</DriveStats.PersistentDownload.Name>
+		<DriveStats.PersistentDownload.Type>NVMe</DriveStats.PersistentDownload.Type>
+		<DriveStats.PersistentDownload.FreeSpaceKb>59659020</DriveStats.PersistentDownload.FreeSpaceKb>
+		<PlatformCallbackResult>0</PlatformCallbackResult>
+		<CrashTrigger>0</CrashTrigger>
+	</PlatformProperties>
+	<EngineData>
+		<MatchingDPStatus>WindowsNo errors</MatchingDPStatus>
+		<RHI.IntegratedGPU>false</RHI.IntegratedGPU>
+		<RHI.DriverDenylisted>false</RHI.DriverDenylisted>
+		<RHI.D3DDebug>false</RHI.D3DDebug>
+		<RHI.Breadcrumbs>false</RHI.Breadcrumbs>
+		<RHI.DRED>false</RHI.DRED>
+		<RHI.DREDMarkersOnly>true</RHI.DREDMarkersOnly>
+		<RHI.DREDContext>false</RHI.DREDContext>
+		<RHI.Aftermath>false</RHI.Aftermath>
+		<RHI.RHIName>D3D12</RHI.RHIName>
+		<RHI.AdapterName>NVIDIA GeForce RTX 3070 Ti</RHI.AdapterName>
+		<RHI.UserDriverVersion>610.62</RHI.UserDriverVersion>
+		<RHI.InternalDriverVersion>32.0.16.1062</RHI.InternalDriverVersion>
+		<RHI.DriverDate>6-11-2026</RHI.DriverDate>
+		<RHI.FeatureLevel>SM6</RHI.FeatureLevel>
+		<RHI.GPUVendor>NVIDIA</RHI.GPUVendor>
+		<RHI.DeviceId>2482</RHI.DeviceId>
+		<DeviceProfile.Name>Windows</DeviceProfile.Name>
+		<Platform.AppHasFocus>true</Platform.AppHasFocus>
+	</EngineData>
+	<GameData>
+		<ProjectVersion>0.1.57525.0</ProjectVersion>
+		<IsGame>true</IsGame>
+		<BuildConfiguration>Shipping</BuildConfiguration>
+	</GameData>
+</FGenericCrashContext>
