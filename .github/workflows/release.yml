@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  build:
+    name: Build attested release zip
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run tests
+        shell: cmd
+        run: npm.cmd test
+
+      - name: Package Vortex extension
+        shell: pwsh
+        run: ./scripts/package.ps1
+
+      - name: Locate release zip
+        id: package
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem -LiteralPath dist -Filter *.zip | Select-Object -First 1
+          if (-not $zip) {
+            throw "No release zip was created in dist."
+          }
+          "zip_path=dist/$($zip.Name)" >> $env:GITHUB_OUTPUT
+          "zip_name=$($zip.Name)" >> $env:GITHUB_OUTPUT
+
+      - name: Validate Vortex package layout
+        shell: pwsh
+        run: |
+          $zipPath = '${{ steps.package.outputs.zip_path }}'
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $entries = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path $zipPath)).Entries.FullName
+          foreach ($required in @('index.js', 'info.json', 'gameart.jpg')) {
+            if ($entries -notcontains $required) {
+              throw "Release zip is missing required top-level file: $required"
+            }
+          }
+
+      - name: Generate SHA256 checksum
+        shell: pwsh
+        run: |
+          $zipPath = '${{ steps.package.outputs.zip_path }}'
+          $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zipPath).Hash.ToLowerInvariant()
+          $zipName = '${{ steps.package.outputs.zip_name }}'
+          "$hash  $zipName" | Set-Content -Encoding ascii -LiteralPath "$zipPath.sha256"
+
+      - name: Attest build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ steps.package.outputs.zip_path }}
+
+      - name: Upload to GitHub Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.package.outputs.zip_path }}
+            ${{ steps.package.outputs.zip_path }}.sha256
