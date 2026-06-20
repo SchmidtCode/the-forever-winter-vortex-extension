@@ -8,6 +8,9 @@ const {
   readExistingManifestEntries,
   regenerateUE4SSManifests,
 } = require('../src/ue4ss-deploy');
+const {
+  ue4ssManifestFilterForState,
+} = require('../src/ue4ss-profile');
 
 function normalize(filePath) {
   return path.normalize(filePath).toLowerCase();
@@ -195,6 +198,78 @@ test('regenerateUE4SSManifests omits folders disabled by active profile state', 
   assert.equal(JSON.parse(modsJson).some((entry) => entry.mod_name === 'NoRecoil'), false);
   assert.equal(JSON.parse(modsJson).some((entry) =>
     entry.mod_name === 'TFWWorkbench' && entry.mod_enabled === true), true);
+});
+
+test('regenerateUE4SSManifests uses exact profile folder metadata when names differ', async () => {
+  const gamePath = path.join('C:', 'Game');
+  const modsDir = path.join(gamePath, UE4SS_MODS_PATH);
+  const fsModule = mockFs({
+    directories: [
+      modsDir,
+      path.join(modsDir, 'NoRecoil'),
+      path.join(modsDir, 'TFWWorkbench'),
+    ],
+    files: {
+      [path.join(modsDir, 'mods.txt')]: 'NoRecoil : 1\r\nTFWWorkbench : 1\r\nKeybinds : 1\r\n',
+    },
+  });
+  const state = {
+    persistent: {
+      profiles: {
+        profile1: {
+          modState: {
+            theforeverwinter: {
+              enabledMod: { enabled: true },
+              disabledMod: { enabled: false },
+            },
+          },
+        },
+      },
+      mods: {
+        theforeverwinter: {
+          enabledMod: {
+            type: 'tfw-ue4ss-mods',
+            attributes: { name: 'Display Name That Does Not Match' },
+            files: [
+              path.join('NoRecoil', 'enabled.txt'),
+            ],
+          },
+          disabledMod: {
+            type: 'tfw-game-root',
+            attributes: { name: 'Another Display Mismatch' },
+            files: [
+              path.join(
+                'Windows',
+                'ForeverWinter',
+                'Binaries',
+                'Win64',
+                'ue4ss',
+                'Mods',
+                'TFWWorkbench',
+                'Scripts',
+                'main.lua',
+              ),
+            ],
+          },
+        },
+      },
+    },
+  };
+
+  await regenerateUE4SSManifests(
+    fsModule,
+    gamePath,
+    ue4ssManifestFilterForState(state, 'profile1'),
+  );
+
+  const modsTxt = await fsModule.readFileAsync(path.join(modsDir, 'mods.txt'));
+  const modsJson = await fsModule.readFileAsync(path.join(modsDir, 'mods.json'));
+  const parsedJson = JSON.parse(modsJson);
+
+  assert.equal(modsTxt.includes('NoRecoil : 1'), true);
+  assert.equal(modsTxt.includes('TFWWorkbench'), false);
+  assert.equal(parsedJson.some((entry) => entry.mod_name === 'NoRecoil'), true);
+  assert.equal(parsedJson.some((entry) => entry.mod_name === 'TFWWorkbench'), false);
 });
 
 test('regenerateUE4SSManifests omits all custom folders when active profile has no enabled UE4SS mods', async () => {

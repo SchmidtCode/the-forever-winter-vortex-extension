@@ -22,6 +22,7 @@ const {
 const { materializePakSymlinks, materializeUE4SSRuntimeSymlinks } = require('./src/pak-deploy');
 const { prepareForModding } = require('./src/setup');
 const { regenerateUE4SSManifests } = require('./src/ue4ss-deploy');
+const { ue4ssManifestFilterForProfile } = require('./src/ue4ss-profile');
 
 function loadVortexApi() {
   try {
@@ -63,107 +64,6 @@ function isTheForeverWinterProfile(context, profileId) {
   const profiles = state.persistent?.profiles || {};
   const profile = profiles[profileId];
   return profile === undefined || profile.gameId === undefined || profile.gameId === GAME_ID;
-}
-
-function normalizeModName(value) {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .replace(/\.[^.]+$/, '')
-    .replace(/[^a-z0-9]+/g, '');
-}
-
-function candidateModNames(modId, mod) {
-  const attributes = mod?.attributes || {};
-  return [
-    modId,
-    mod?.installationPath,
-    attributes.name,
-    attributes.logicalFileName,
-    attributes.modName,
-    attributes.customFileName,
-  ]
-    .filter(Boolean)
-    .map((value) => path.basename(String(value), path.extname(String(value))))
-    .map(normalizeModName)
-    .filter(Boolean);
-}
-
-function profileModState(profile) {
-  const modState = profile?.modState || {};
-  return modState[GAME_ID] || modState;
-}
-
-function activeProfileIdFromState(state, profileId) {
-  return profileId
-    || state.settings?.profiles?.activeProfileId
-    || state.settings?.profiles?.activeProfile
-    || state.persistent?.profiles?.activeProfileId
-    || state.persistent?.profiles?.activeProfile
-    || state.persistent?.activeProfileId
-    || state.persistent?.activeProfile;
-}
-
-function collectProfileModState(state, profileId) {
-  const profile = state.persistent?.profiles?.[profileId];
-  const sources = [
-    profileModState(profile),
-    state.persistent?.profileModState?.[profileId]?.[GAME_ID],
-    state.persistent?.profileModState?.[profileId],
-    state.persistent?.modState?.[profileId]?.[GAME_ID],
-    state.persistent?.modState?.[profileId],
-    state.settings?.profiles?.modState?.[profileId]?.[GAME_ID],
-    state.settings?.profiles?.modState?.[profileId],
-  ];
-
-  for (const source of sources) {
-    if (source !== undefined && Object.keys(source).length > 0) {
-      return source;
-    }
-  }
-
-  return {};
-}
-
-function isModEnabledInProfile(modState, modId) {
-  const state = modState?.[modId];
-  if (state === undefined) {
-    return undefined;
-  }
-  if (typeof state === 'boolean') {
-    return state;
-  }
-  return state.enabled;
-}
-
-function ue4ssManifestFilterForProfile(context, profileId) {
-  const state = context.api.getState();
-  const activeProfileId = activeProfileIdFromState(state, profileId);
-  const modState = collectProfileModState(state, activeProfileId);
-  const mods = state.persistent?.mods?.[GAME_ID] || {};
-  const allowedNames = new Set();
-  const disabledNames = new Set();
-  let hasKnownProfileState = false;
-
-  for (const [modId, mod] of Object.entries(mods)) {
-    const enabled = isModEnabledInProfile(modState, modId);
-    if (enabled === undefined) {
-      continue;
-    }
-    hasKnownProfileState = true;
-    for (const name of candidateModNames(modId, mod)) {
-      if (enabled) {
-        allowedNames.add(name);
-      } else {
-        disabledNames.add(name);
-      }
-    }
-  }
-
-  return {
-    allowedFolderNames: hasKnownProfileState ? allowedNames : undefined,
-    disabledFolderNames: disabledNames,
-  };
 }
 
 function statExists(filePath) {

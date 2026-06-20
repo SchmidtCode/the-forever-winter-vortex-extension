@@ -175,7 +175,7 @@ Build a release zip containing only runtime extension files:
 npm run package
 ```
 
-The package is written to `dist/the-forever-winter-vortex-extension-0.0.7.zip`.
+The package is written to `dist/the-forever-winter-vortex-extension-0.0.6.zip`.
 
 ## Manual Smoke Test
 

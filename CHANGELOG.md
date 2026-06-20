@@ -1,13 +1,10 @@
 # Changelog
 
-## 0.0.7-beta
-
-- When Vortex provides active profile mod state, generate UE4SS `mods.txt` and `mods.json` from enabled Vortex mods instead of trusting leftover folders in `Win64\ue4ss\Mods`.
-- Fix collection/profile disable cases where stale UE4SS folders kept custom mods like `NoRecoil`, `TFWWorkbench`, or `FWMM_Discovery` enabled in generated manifests.
-
 ## 0.0.6-beta
 
 - Honor disabled Vortex profile/collection mods when regenerating UE4SS `mods.txt` and `mods.json`, so stale deployed folders do not keep disabled UE4SS mods enabled.
+- Generate UE4SS manifests from enabled Vortex profile state when available instead of trusting leftover folders in `Win64\ue4ss\Mods`.
+- Prefer actual UE4SS folder paths from Vortex mod metadata over display-name guesses, fixing collection add/remove cases for mods like `NoRecoil`, `TFWWorkbench`, and `FWMM_Discovery`.
 
 ## 0.0.5-beta
 

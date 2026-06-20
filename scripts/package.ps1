@@ -27,6 +27,7 @@ Copy-Item -LiteralPath (Join-Path $root "src\pak-deploy.js") -Destination (Join-
 Copy-Item -LiteralPath (Join-Path $root "src\setup.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-deploy.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-manifest.js") -Destination (Join-Path $staging "src")
+Copy-Item -LiteralPath (Join-Path $root "src\ue4ss-profile.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "scripts\lint-ue4ss-manifest.js") -Destination (Join-Path $staging "scripts")
 
 if (Test-Path $zipPath) {

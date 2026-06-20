@@ -36,6 +36,19 @@ function normalizeModName(value) {
     .replace(/[^a-z0-9]+/g, '');
 }
 
+function optionValues(value) {
+  if (value === undefined || value === null) {
+    return [];
+  }
+  if (typeof value === 'string') {
+    return [value];
+  }
+  if (typeof value[Symbol.iterator] === 'function') {
+    return Array.from(value);
+  }
+  return [value];
+}
+
 async function listUE4SSModFolders(fsModule, modsDir, options = {}) {
   const stat = await statExists(fsModule, modsDir);
   if (stat === undefined || !stat.isDirectory()) {
@@ -44,10 +57,10 @@ async function listUE4SSModFolders(fsModule, modsDir, options = {}) {
 
   const entries = await fsModule.readdirAsync(modsDir);
   const folders = [];
-  const disabledFolderNames = new Set((options.disabledFolderNames || []).map(normalizeModName));
+  const disabledFolderNames = new Set(optionValues(options.disabledFolderNames).map(normalizeModName));
   const allowedFolderNames = options.allowedFolderNames === undefined
     ? undefined
-    : new Set((options.allowedFolderNames || []).map(normalizeModName));
+    : new Set(optionValues(options.allowedFolderNames).map(normalizeModName));
 
   for (const entry of entries) {
     if (isManifestFileName(entry)) {
