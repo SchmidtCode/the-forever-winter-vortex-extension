@@ -179,6 +179,18 @@ npm run package
 
 The package is written to `dist/the-forever-winter-vortex-extension-0.0.6.zip`.
 
+## Release Verification
+
+GitHub releases are built by GitHub Actions directly from the source code in this repository. The release workflow runs the test suite, builds the Vortex extension zip, verifies that the archive contains the required top-level `index.js`, `info.json`, and `gameart.jpg` files, publishes a SHA256 checksum, and creates a GitHub artifact attestation for the zip.
+
+To verify a downloaded release zip:
+
+```powershell
+gh attestation verify the-forever-winter-vortex-extension-0.0.6.zip -R OWNER/REPO
+```
+
+Replace `OWNER/REPO` with this repository's GitHub owner and repository name. Nexus Mods uploads should use the same exact zip from the matching GitHub Release so the published SHA256 checksum and attestation both match.
+
 ## Manual Smoke Test
 
 - Extension loads without errors in Vortex.
