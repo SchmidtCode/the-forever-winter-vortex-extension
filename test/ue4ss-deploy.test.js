@@ -272,6 +272,61 @@ test('regenerateUE4SSManifests uses exact profile folder metadata when names dif
   assert.equal(parsedJson.some((entry) => entry.mod_name === 'TFWWorkbench'), false);
 });
 
+test('regenerateUE4SSManifests materializes symlinked manifests before writing', async () => {
+  const gamePath = path.join('C:', 'Game');
+  const modsDir = path.join(gamePath, UE4SS_MODS_PATH);
+  const fsModule = mockFs({
+    directories: [
+      modsDir,
+      path.join(modsDir, 'NoRecoil'),
+    ],
+    files: {
+      [path.join(modsDir, 'mods.txt')]: 'Keybinds : 1\r\n',
+      [path.join(modsDir, 'mods.json')]: JSON.stringify([
+        { mod_name: 'Keybinds', mod_enabled: true },
+      ]),
+    },
+  });
+  const ops = [];
+  const nodeFs = {
+    promises: {
+      lstat(filePath) {
+        ops.push(['lstat', path.basename(filePath)]);
+        return Promise.resolve({ isSymbolicLink: () => true });
+      },
+      readlink(filePath) {
+        ops.push(['readlink', path.basename(filePath)]);
+        return Promise.resolve(`${filePath}.source`);
+      },
+      copyFile(source, destination) {
+        ops.push(['copyFile', path.basename(source), path.basename(destination).startsWith(path.basename(source))]);
+        return Promise.resolve();
+      },
+      unlink(filePath) {
+        ops.push(['unlink', path.basename(filePath)]);
+        return Promise.resolve();
+      },
+      rename(source, destination) {
+        ops.push(['rename', path.basename(destination)]);
+        return Promise.resolve();
+      },
+      rm() {
+        return Promise.resolve();
+      },
+    },
+  };
+
+  const result = await regenerateUE4SSManifests(fsModule, gamePath, { nodeFs });
+  const modsTxt = await fsModule.readFileAsync(path.join(modsDir, 'mods.txt'));
+
+  assert.equal(result.manifestMaterialization.materialized, 2);
+  assert.deepEqual(ops.filter((op) => op[0] === 'unlink').map((op) => op[1]), [
+    'mods.txt',
+    'mods.json',
+  ]);
+  assert.equal(modsTxt.includes('NoRecoil : 1'), true);
+});
+
 test('regenerateUE4SSManifests omits all custom folders when active profile has no enabled UE4SS mods', async () => {
   const gamePath = path.join('C:', 'Game');
   const modsDir = path.join(gamePath, UE4SS_MODS_PATH);

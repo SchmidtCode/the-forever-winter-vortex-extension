@@ -9,6 +9,21 @@ const { isBuiltInEntryName } = require('./ue4ss-manifest');
 
 const IGNORED_UE4SS_FOLDER_NAMES = new Set(['shared']);
 const MANIFEST_FILE_NAMES = new Set(['mods.txt', 'mods.json']);
+const GENERIC_ARCHIVE_NAME_PARTS = new Set([
+  '7z',
+  'archive',
+  'forever',
+  'foreverwinter',
+  'mod',
+  'mods',
+  'nexus',
+  'rar',
+  'the',
+  'tfw',
+  'vortex',
+  'winter',
+  'zip',
+]);
 
 function normalizeModName(value) {
   return String(value || '')
@@ -157,18 +172,49 @@ function ue4ssFolderNamesFromMod(mod) {
 
 function candidateModNames(modId, mod) {
   const attributes = mod?.attributes || {};
-  return [
+  const values = [
     modId,
     mod?.installationPath,
     attributes.name,
     attributes.logicalFileName,
     attributes.modName,
     attributes.customFileName,
-  ]
+  ].filter(Boolean);
+  const names = new Set();
+
+  for (const value of values) {
+    for (const name of archiveNameCandidates(value)) {
+      names.add(name);
+    }
+  }
+
+  return Array.from(names);
+}
+
+function archiveNameCandidates(value) {
+  const base = path.basename(String(value), path.extname(String(value)));
+  const candidates = new Set([normalizeModName(base)]);
+  const parts = String(base)
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(/[^a-z0-9]+/i)
+    .map((part) => part.trim())
     .filter(Boolean)
-    .map((value) => path.basename(String(value), path.extname(String(value))))
-    .map(normalizeModName)
-    .filter(Boolean);
+    .filter((part) => !/^(?:v?\d+|\d+(?:\.\d+)*)$/i.test(part))
+    .filter((part) => !GENERIC_ARCHIVE_NAME_PARTS.has(part.toLowerCase()));
+
+  for (const part of parts) {
+    const normalized = normalizeModName(part);
+    if (normalized.length >= 4) {
+      candidates.add(normalized);
+    }
+  }
+
+  const joined = normalizeModName(parts.join(''));
+  if (joined.length >= 4) {
+    candidates.add(joined);
+  }
+
+  return Array.from(candidates).filter(Boolean);
 }
 
 function profileModState(profile) {

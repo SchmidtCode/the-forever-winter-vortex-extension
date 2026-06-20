@@ -135,5 +135,6 @@ async function materializeUE4SSRuntimeSymlinks(gamePath, nodeFs = require('fs'))
 module.exports = {
   isPakContainerFile,
   materializePakSymlinks,
+  materializeSymlinkFiles,
   materializeUE4SSRuntimeSymlinks,
 };

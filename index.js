@@ -213,7 +213,10 @@ async function postDeployForContext(context, profileId) {
   }
 
   try {
-    await regenerateUE4SSManifests(fs, gamePath, manifestFilter);
+    await regenerateUE4SSManifests(fs, gamePath, {
+      ...manifestFilter,
+      nodeFs,
+    });
   } catch (err) {
     notifyUE4SSManifestFailed(context.api, err);
   }

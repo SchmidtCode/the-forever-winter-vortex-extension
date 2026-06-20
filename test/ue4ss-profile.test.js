@@ -147,3 +147,34 @@ test('ue4ssManifestFilterForState prefers actual folder paths over display-name 
   assert.equal(filter.disabledFolderNames.has(normalizeModName('TFWWorkbench')), true);
   assert.equal(filter.allowedFolderNames.has(normalizeModName('TFWWorkbench')), false);
 });
+
+test('ue4ssManifestFilterForState recognizes NoRecoil from long archive names', () => {
+  const state = {
+    persistent: {
+      profiles: {
+        profile1: {
+          modState: {
+            [GAME_ID]: {
+              longArchiveMod: { enabled: true },
+            },
+          },
+        },
+      },
+      mods: {
+        [GAME_ID]: {
+          longArchiveMod: {
+            type: MOD_TYPES.UE4SS_MODS,
+            installationPath: 'ForeverWinter-Mod-NoRecoil-0.1.1.zip-47-0-1-1-1761663710',
+            attributes: {
+              logicalFileName: 'ForeverWinter-Mod-NoRecoil-0.1.1.zip-47-0-1-1-1761663710.zip',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const filter = ue4ssManifestFilterForState(state, 'profile1');
+
+  assert.equal(filter.allowedFolderNames.has(normalizeModName('NoRecoil')), true);
+});

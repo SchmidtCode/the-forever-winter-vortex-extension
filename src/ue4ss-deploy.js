@@ -1,6 +1,7 @@
 const path = require('path');
 
 const { UE4SS_MODS_PATH } = require('./constants');
+const { materializeSymlinkFiles } = require('./pak-deploy');
 const {
   buildAggregateManifestEntries,
   parseManifest,
@@ -102,6 +103,29 @@ async function ensureDirectory(fsModule, dirPath) {
   }
 }
 
+async function materializeManifestSymlinks(nodeFs, modsDir) {
+  if (nodeFs === undefined) {
+    return {
+      checked: 0,
+      materialized: 0,
+      files: [],
+      errors: [],
+    };
+  }
+
+  const result = await materializeSymlinkFiles([
+    path.join(modsDir, 'mods.txt'),
+    path.join(modsDir, 'mods.json'),
+  ], nodeFs);
+
+  if (result.errors.length > 0) {
+    const firstError = result.errors[0];
+    throw new Error(`could not replace symlinked UE4SS manifest before writing ${path.basename(firstError.filePath)}: ${firstError.message}`);
+  }
+
+  return result;
+}
+
 async function regenerateUE4SSManifests(fsModule, gamePath, options = {}) {
   if (gamePath === undefined) {
     return { skipped: true, reason: 'missing-game-path' };
@@ -116,6 +140,7 @@ async function regenerateUE4SSManifests(fsModule, gamePath, options = {}) {
   }
 
   await ensureDirectory(fsModule, modsDir);
+  const manifestMaterialization = await materializeManifestSymlinks(options.nodeFs, modsDir);
   const entries = buildAggregateManifestEntries(existingEntries, folders);
   await fsModule.writeFileAsync(path.join(modsDir, 'mods.txt'), renderModsTxt(entries), 'utf8');
   await fsModule.writeFileAsync(path.join(modsDir, 'mods.json'), renderModsJson(entries), 'utf8');
@@ -125,12 +150,14 @@ async function regenerateUE4SSManifests(fsModule, gamePath, options = {}) {
     modsDir,
     folders,
     entries,
+    manifestMaterialization,
   };
 }
 
 module.exports = {
   isManifestFileName,
   listUE4SSModFolders,
+  materializeManifestSymlinks,
   readExistingManifestEntries,
   regenerateUE4SSManifests,
 };
