@@ -6,6 +6,8 @@
 - Generate UE4SS manifests from enabled Vortex profile state when available instead of trusting leftover folders in `Win64\ue4ss\Mods`.
 - Prefer actual UE4SS folder paths from Vortex mod metadata over display-name guesses, fixing collection add/remove cases for mods like `NoRecoil`, `TFWWorkbench`, and `FWMM_Discovery`.
 - Replace symlinked UE4SS `mods.txt` and `mods.json` manifests with physical generated files before writing, so deployment does not edit the UE4SS loader mod's source manifests.
+- Keep PAK triplets packaged under generic `Mods` folders routed to normal PAK destinations instead of mistaking them for UE4SS mod folders.
+- Warn after deployment when UE4SS is enabled but loader files are missing, or when PAK triplets are still present under `Win64\ue4ss\Mods` from an older broken install.
 
 ## 0.0.5-beta
 

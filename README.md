@@ -73,7 +73,9 @@ UE4SS mod-only archives under `ue4ss\Mods\<mod>` are installed to:
 Windows\ForeverWinter\Binaries\Win64\ue4ss\Mods
 ```
 
-If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`.
+If a UE4SS archive also contains PAK files, the extension installs it as a game-root mod so the UE4SS part and PAK part can land in separate game folders. The PAK part still follows the normal routing rules: known root-Paks go to `Content\Paks`, and unknown bare triplets default to `Content\Paks\Mods`. PAK triplets inside a generic `Mods` folder are treated as PAK mods, not UE4SS Lua mods.
+
+When changing extension versions, remove and reinstall any mod that was previously routed incorrectly. Vortex can keep the already-installed staging folder for a mod even after a purge/redeploy, so collection enable/disable alone may preserve missing UE4SS loader files or old PAK destinations. After deployment, the extension warns if UE4SS is enabled but `dwmapi.dll`, `ue4ss\UE4SS.dll`, or `ue4ss\UE4SS-settings.ini` are missing, or if PAK triplets are still sitting under `Win64\ue4ss\Mods`.
 
 Some The Forever Winter mod archives bundle their own copy of UE4SS, Signature Bypass, or shared UE4SS helper files alongside the actual mod. Those bundled dependency files are intentionally skipped when the archive also contains a real UE4SS mod folder. Install UE4SS and Signature Bypass as their own Vortex mods, then install content mods like NoRecoil or Cheaper Innards Upgrades on top. This avoids Vortex conflicts over shared files such as `dwmapi.dll`, `UE4SS.dll`, `UE4SS-settings.ini`, `mods.txt`, `mods.json`, `Keybinds`, `shared`, `dsound.dll`, and `bitfix`.
 

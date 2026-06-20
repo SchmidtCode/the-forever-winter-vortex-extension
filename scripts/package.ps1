@@ -22,6 +22,7 @@ Copy-Item -LiteralPath (Join-Path $root "README.md") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "CHANGELOG.md") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "LICENSE") -Destination $staging
 Copy-Item -LiteralPath (Join-Path $root "src\constants.js") -Destination (Join-Path $staging "src")
+Copy-Item -LiteralPath (Join-Path $root "src\deploy-health.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\installers.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\pak-deploy.js") -Destination (Join-Path $staging "src")
 Copy-Item -LiteralPath (Join-Path $root "src\setup.js") -Destination (Join-Path $staging "src")
